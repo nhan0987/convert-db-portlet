@@ -34,7 +34,6 @@ public class ActionHistoryUtils {
 			ActionResponse actionResponse) throws Exception {
 
 		try {
-test
 			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 					.getAttribute(WebKeys.THEME_DISPLAY);
 
