@@ -10,7 +10,9 @@ import javax.portlet.ActionResponse;
 import org.opencps.accountmgt.model.Business;
 import org.opencps.accountmgt.model.Citizen;
 import org.opencps.dossiermgt.model.Dossier;
+import org.opencps.dossiermgt.model.ServiceConfig;
 import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
+import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.util.AccountBean;
 import org.opencps.util.AccountUtil;
 import org.opencps.util.DLFolderUtil;
@@ -678,5 +680,288 @@ public class DossierUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean fetchDossiers2(ThemeDisplay themeDisplay, long dossierId) {
+
+		try {
+
+			if (dossierId > 0) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				Dossier object = null;
+				object = DossierLocalServiceUtil.getDossier(dossierId);
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_DOSSIER, WebKeys.DOSSIER,
+						WebKeys.DOSSIERColumns);
+
+				if (Validator.isNotNull(object)) {
+
+					ServiceConfig serviceConfig = null;
+
+					if (object.getServiceConfigId() > 0) {
+
+						serviceConfig = ServiceConfigLocalServiceUtil
+								.getServiceConfig(object.getServiceConfigId());
+
+						if (Validator.isNotNull(serviceConfig)) {
+
+							ExpandoRowLocalServiceUtil.addRow(
+									expandoTable.getTableId(),
+									object.getDossierId());
+
+							JSONObject columnNames = WebKeys
+									.getDOSSIERColumnNames();
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("userId"),
+									object.getDossierId(),
+									String.valueOf(object.getUserId()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("createDate"), object
+											.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getCreateDate(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("modifiedDate"), object
+											.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getModifiedDate(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("ownerOrganizationId"),
+									object.getDossierId(), String
+											.valueOf(object
+													.getOwnerOrganizationId()));
+
+							ExpandoValueLocalServiceUtil
+									.addValue(
+											companyId,
+											WebKeys.DOSSIER,
+											WebKeys.EXTableName_DOSSIER,
+											columnNames
+													.getString("serviceConfig"),
+											object.getDossierId(),
+											String.valueOf(object
+													.getServiceConfigId()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("serviceInfoId"),
+									object.getDossierId(),
+									String.valueOf(object.getServiceInfoId()));
+
+							ExpandoValueLocalServiceUtil
+									.addValue(
+											companyId,
+											WebKeys.DOSSIER,
+											WebKeys.EXTableName_DOSSIER,
+											columnNames
+													.getString("serviceDomainIndex"),
+											object.getDossierId(),
+											String.valueOf(object
+													.getServiceDomainIndex()));
+
+							ExpandoValueLocalServiceUtil
+									.addValue(
+											companyId,
+											WebKeys.DOSSIER,
+											WebKeys.EXTableName_DOSSIER,
+											columnNames
+													.getString("serviceAdministrationIndex"),
+											object.getDossierId(),
+											String.valueOf(object
+													.getServiceAdministrationIndex()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("dossierTemplateId"),
+									object.getDossierId(), String
+											.valueOf(object
+													.getDossierTemplateId()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("govAgencyCode"),
+									object.getDossierId(),
+									String.valueOf(object.getGovAgencyCode()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("govAgencyName"),
+									object.getDossierId(),
+									String.valueOf(object.getGovAgencyName()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("serviceMode"),
+									object.getDossierId(),
+									String.valueOf(object.getServiceMode()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("counter"),
+									object.getDossierId(),
+									String.valueOf(object.getCounter()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("subjectId"),
+									object.getDossierId(),
+									String.valueOf(object.getSubjectId()));
+
+							// ExpandoValueLocalServiceUtil.addValue(
+							// companyId, WebKeys.DOSSIER,
+							// WebKeys.EXTableName_DOSSIER,
+							// columnNames.getString("subjectName"),
+							// object.getDossierId(),
+							// String.valueOf(object.getUserId()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("note"),
+									object.getDossierId(),
+									String.valueOf(object.getNote()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("submitDateTime"),
+									object.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getSubmitDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("receiveDateTime"),
+									object.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getReceiveDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("estimateDateTime"),
+									object.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getEstimateDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("finishDateTime"),
+									object.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getFinishDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("estimateDateTime"),
+									object.getDossierId(),
+									DateTimeUtil.convertDateToString(
+											object.getEstimateDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("receptionNo"),
+									object.getDossierId(),
+									String.valueOf(object.getReceptionNo()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("dossierStatus"),
+									object.getDossierId(),
+									String.valueOf(object.getDossierStatus()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("dossierSource"),
+									object.getDossierId(),
+									String.valueOf(object.getDossierSource()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("oid"),
+									object.getDossierId(),
+									String.valueOf(object.getOid()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER, columnNames
+											.getString("keypayRedirectUrl"),
+									object.getDossierId(), String
+											.valueOf(object
+													.getKeypayRedirectUrl()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("delayStatus"),
+									object.getDossierId(),
+									String.valueOf(object.getDelayStatus()));
+
+							ExpandoValueLocalServiceUtil.addValue(companyId,
+									WebKeys.DOSSIER,
+									WebKeys.EXTableName_DOSSIER,
+									columnNames.getString("dossierIdNew"),
+									object.getDossierId(), StringPool.BLANK);
+
+							_log.info("=====DossierId:" + object.getDossierId());
+							
+							DossierFileUtils dossierFileUtils = new DossierFileUtils();
+							dossierFileUtils.fetchDossierFile2(themeDisplay, object.getDossierId());
+							
+							DossierLogUtils dossierLogUtils = new DossierLogUtils();
+							dossierLogUtils.fetchDossierLog2(themeDisplay, object.getDossierId());
+							
+							PaymentFileUtils paymentFileUtils = new PaymentFileUtils();
+							paymentFileUtils.fetchPaymentFiles2(themeDisplay, object.getDossierId());
+							
+							return true;
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }

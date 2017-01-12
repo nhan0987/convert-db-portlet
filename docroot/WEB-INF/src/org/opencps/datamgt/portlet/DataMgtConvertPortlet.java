@@ -1325,7 +1325,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			ActionResponse actionResponse) throws Exception {
 
 		ProcessOrderUtils utils = new ProcessOrderUtils();
-		utils.fetchProcessOrders(actionRequest, actionResponse);
+		utils.fetchProcessOrders2(actionRequest, actionResponse);
 
 	}
 
@@ -1377,13 +1377,15 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 	public void fetchAllDossierContent(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
-		fetchDossiers(actionRequest, actionResponse);
-		fetchDossierFile(actionRequest, actionResponse);
-		fetchDossierLog(actionRequest, actionResponse);
-		fetchDossierFileLog(actionRequest, actionResponse);
+//		fetchDossiers(actionRequest, actionResponse);
+//		fetchDossierFile(actionRequest, actionResponse);
+//		fetchDossierLog(actionRequest, actionResponse);
+//		fetchDossierFileLog(actionRequest, actionResponse);
+//		fetchProcessOrders(actionRequest, actionResponse);
+//		fetchPaymentFiles(actionRequest, actionResponse);
+//		fetchActionhistory(actionRequest, actionResponse);
+		
 		fetchProcessOrders(actionRequest, actionResponse);
-		fetchPaymentFiles(actionRequest, actionResponse);
-		fetchActionhistory(actionRequest, actionResponse);
 
 	}
 
