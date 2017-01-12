@@ -17,21 +17,37 @@ import org.opencps.datamgt.model.DictCollection;
 import org.opencps.datamgt.model.DictItem;
 import org.opencps.datamgt.service.DictCollectionLocalServiceUtil;
 import org.opencps.datamgt.service.DictItemLocalServiceUtil;
+import org.opencps.dossiermgt.model.Dossier;
+import org.opencps.dossiermgt.model.DossierFile;
+import org.opencps.dossiermgt.model.DossierFileLog;
+import org.opencps.dossiermgt.model.DossierLog;
 import org.opencps.dossiermgt.model.DossierPart;
 import org.opencps.dossiermgt.model.DossierTemplate;
 import org.opencps.dossiermgt.model.ServiceConfig;
+import org.opencps.dossiermgt.service.DossierFileLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierFileLogLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierLogLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierPartLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierTemplateLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.expando.model.DomainConfigExt;
 import org.opencps.expando.service.ExpandoExtLocalServiceUtil;
+import org.opencps.paymentmgt.NoSuchPaymentFileException;
+import org.opencps.paymentmgt.model.PaymentFile;
+import org.opencps.paymentmgt.service.PaymentFileLocalServiceUtil;
+import org.opencps.processmgt.NoSuchProcessOrderException;
 import org.opencps.processmgt.NoSuchServiceProcessException;
+import org.opencps.processmgt.model.ActionHistory;
+import org.opencps.processmgt.model.ProcessOrder;
 import org.opencps.processmgt.model.ProcessStep;
 import org.opencps.processmgt.model.ProcessStepDossierPart;
 import org.opencps.processmgt.model.ProcessWorkflow;
 import org.opencps.processmgt.model.ServiceProcess;
 import org.opencps.processmgt.model.StepAllowance;
 import org.opencps.processmgt.model.WorkflowOutput;
+import org.opencps.processmgt.service.ActionHistoryLocalServiceUtil;
+import org.opencps.processmgt.service.ProcessOrderLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessStepDossierPartLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessStepLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessWorkflowLocalServiceUtil;
@@ -1124,15 +1140,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 												}
 
-												// ServiceInfoProcessPK
-												// serviceInfoProcessPK =
-												// ServiceInfoProcessLocalServiceUtil.getServiceInfoProcess(serviceInfoProcessPK)
-												// new ServiceInfoProcessPK(
-												// serviceConfig
-												// .getServiceProcessId(),
-												// serviceConfig
-												// .getServiceInfoId());
-
 												ServiceInfoProcessLocalServiceUtil
 														.deleteServiceInfoProcess(
 																serviceConfig
@@ -1149,6 +1156,10 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 													.deleteServiceConfig(serviceConfig);
 										}
 									}
+
+									removeDossierContent(themeDisplay,
+											serviceInfo.getServiceinfoId());
+
 									ServiceInfoLocalServiceUtil
 											.deleteServiceInfo(serviceInfo);
 								}
@@ -1160,6 +1171,128 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 					}
 				}
 			}
+		} catch (Exception e) {
+			_log.error(e);
+		}
+	}
+
+	public void removeDossierContent(ThemeDisplay themeDisplay,
+			long serviceInfoId) {
+
+		try {
+
+			if (serviceInfoId > 0) {
+				List<Dossier> dossierList = new ArrayList<Dossier>();
+
+				dossierList = DossierLocalServiceUtil
+						.getDossiersByServiceInfo(serviceInfoId);
+
+				if (dossierList.size() > 0) {
+
+					for (Dossier dossier : dossierList) {
+
+						ProcessOrder processOrder = null;
+
+						try {
+							processOrder = ProcessOrderLocalServiceUtil
+									.findBy_Dossier(dossier.getDossierId());
+						} catch (NoSuchProcessOrderException e) {
+
+						}
+
+						if (Validator.isNotNull(processOrder)) {
+
+							List<ActionHistory> actionHistoryList = new ArrayList<ActionHistory>();
+
+							actionHistoryList = ActionHistoryLocalServiceUtil
+									.getActionHistoriesByG_PORD(
+											themeDisplay.getScopeGroupId(),
+											processOrder.getProcessOrderId(),
+											QueryUtil.ALL_POS,
+											QueryUtil.ALL_POS);
+
+							if (actionHistoryList.size() > 0) {
+
+								for (ActionHistory actionHistory : actionHistoryList) {
+
+									ActionHistoryLocalServiceUtil
+											.deleteActionHistory(actionHistory);
+								}
+							}
+							ProcessOrderLocalServiceUtil
+									.deleteProcessOrder(processOrder);
+						}
+						// /////////////////////////////////////////////////////////////
+						List<DossierFile> dossierFileList = new ArrayList<DossierFile>();
+
+						dossierFileList = DossierFileLocalServiceUtil
+								.getDossierFileByDossierId(dossier
+										.getDossierId());
+
+						if (dossierFileList.size() > 0) {
+
+							for (DossierFile dossierFile : dossierFileList) {
+
+								DossierFileLocalServiceUtil
+										.deleteDossierFile(dossierFile);
+							}
+
+						}
+						// /////////////////////////////////////////////////////////////
+						List<DossierLog> dossierLogList = new ArrayList<DossierLog>();
+
+						dossierLogList = DossierLogLocalServiceUtil
+								.getDossierLogByDossierId(dossier
+										.getDossierId());
+
+						if (dossierLogList.size() > 0) {
+
+							for (DossierLog dossierLog : dossierLogList) {
+
+								List<DossierFileLog> dossierFileLogList = new ArrayList<DossierFileLog>();
+
+								try {
+									dossierFileLogList = DossierFileLogLocalServiceUtil
+											.getFileLogs(dossierLog
+													.getDossierLogId(), dossier
+													.getDossierId());
+								} catch (Exception e) {
+
+								}
+
+								if (dossierFileLogList.size() > 0) {
+
+									for (DossierFileLog dossierFileLog : dossierFileLogList) {
+
+										DossierFileLogLocalServiceUtil
+												.deleteDossierFileLog(dossierFileLog);
+									}
+								}
+
+								DossierLogLocalServiceUtil
+										.deleteDossierLog(dossierLog);
+							}
+						}
+						// /////////////////////////////////////////////////////////////
+						List<PaymentFile> paymentFileList = new ArrayList<PaymentFile>();
+
+						paymentFileList = PaymentFileLocalServiceUtil
+								.getPaymentFileByD_(dossier.getDossierId());
+
+						if (paymentFileList.size() > 0) {
+
+							for (PaymentFile paymentFile : paymentFileList) {
+
+								PaymentFileLocalServiceUtil
+										.deletePaymentFile(paymentFile);
+							}
+						}
+						DossierLocalServiceUtil.deleteDossier(dossier);
+					}
+
+				}
+			}
+
 		} catch (Exception e) {
 			_log.error(e);
 		}
@@ -1239,8 +1372,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			_log.equals(e);
 		}
 	}
-	
-
 
 	// /////////////////////////////////////////////////////
 	public void fetchDossiers(ActionRequest actionRequest,
@@ -1371,14 +1502,14 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 	public void fetchAllDossierContent(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
-//		fetchDossiers(actionRequest, actionResponse);
-//		fetchDossierFile(actionRequest, actionResponse);
-//		fetchDossierLog(actionRequest, actionResponse);
-//		fetchDossierFileLog(actionRequest, actionResponse);
-//		fetchProcessOrders(actionRequest, actionResponse);
-//		fetchPaymentFiles(actionRequest, actionResponse);
-//		fetchActionhistory(actionRequest, actionResponse);
-		
+		// fetchDossiers(actionRequest, actionResponse);
+		// fetchDossierFile(actionRequest, actionResponse);
+		// fetchDossierLog(actionRequest, actionResponse);
+		// fetchDossierFileLog(actionRequest, actionResponse);
+		// fetchProcessOrders(actionRequest, actionResponse);
+		// fetchPaymentFiles(actionRequest, actionResponse);
+		// fetchActionhistory(actionRequest, actionResponse);
+
 		fetchProcessOrders(actionRequest, actionResponse);
 
 	}
@@ -1427,27 +1558,27 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		commonUtils.setUserGroup(actionRequest, actionResponse);
 
 	}
-	
+
 	public void testServiceProcess(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
-		
+
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 				.getAttribute(WebKeys.THEME_DISPLAY);
-		
+
 		ServiceProcess serviceProcess = null;
 
 		try {
 
-			serviceProcess = ServiceProcessLocalServiceUtil
-					.getServiceProcess(themeDisplay.getScopeGroupId(),
-							"dddfghjgh");
+			serviceProcess = ServiceProcessLocalServiceUtil.getServiceProcess(
+					themeDisplay.getScopeGroupId(), "dddfghjgh");
 		} catch (NoSuchServiceProcessException e) {
 
 		}
-		
-		_log.info("==serviceProcess:"+serviceProcess);
+
+		_log.info("==serviceProcess:" + serviceProcess);
 
 	}
+
 	private static Log _log = LogFactoryUtil
 			.getLog(DataMgtConvertPortlet.class);
 }

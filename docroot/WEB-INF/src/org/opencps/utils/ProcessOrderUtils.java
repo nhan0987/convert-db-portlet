@@ -483,7 +483,7 @@ public class ProcessOrderUtils {
 							columnNames.getString("processOrderIdNew"),
 							object.getProcessOrderId(), StringPool.BLANK);
 
-					_log.info("=====rocessOrderId:"
+					_log.info("=====processOrderId:"
 							+ object.getProcessOrderId());
 
 					ActionHistoryUtils actionHistoryUtils = new ActionHistoryUtils();
