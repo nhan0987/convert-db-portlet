@@ -364,9 +364,17 @@ public class WorkflowUtils {
 				// /
 				long processWorkflowId =
 					CounterLocalServiceUtil.increment(WebKeys.PROCESS_WORKFLOW);
+				
+				
 
 				processWorkflow =
 					ProcessWorkflowLocalServiceUtil.createProcessWorkflow(processWorkflowId);
+				
+				_log.info("====processWorkflowId:"+processWorkflowId);
+				_log.info("====serviceProcessIdNew:"+serviceProcessIdNew);
+				_log.info("====preProcessStepIdNew:"+preProcessStepIdNew);
+				_log.info("====postProcessStepIdNew:"+postProcessStepIdNew);
+				_log.info("====actionName:"+actionName);
 
 				processWorkflow.setServiceProcessId(Validator.isNotNull(serviceProcessIdNew)
 					? Long.valueOf(serviceProcessIdNew) : 0);
@@ -400,7 +408,7 @@ public class WorkflowUtils {
 				processWorkflow.setGroupId(serviceContext.getScopeGroupId());
 				processWorkflow.setUserId(serviceContext.getUserId());
 
-				ProcessWorkflowLocalServiceUtil.updateProcessWorkflow(processWorkflow);
+				ProcessWorkflowLocalServiceUtil.addProcessWorkflow(processWorkflow);
 
 				ExpandoValueLocalServiceUtil.addValue(
 					themeDisplay.getCompanyId(), WebKeys.PROCESS_WORKFLOW,

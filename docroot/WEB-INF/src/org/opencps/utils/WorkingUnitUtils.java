@@ -380,7 +380,7 @@ public class WorkingUnitUtils {
 						workingUnit.setMappingOrganisationId(mappingOrganizationIdNew);
 
 						WorkingUnitLocalServiceUtil
-								.updateWorkingUnit(workingUnit);
+								.addWorkingUnit(workingUnit);
 
 						ExpandoValueLocalServiceUtil
 								.addValue(themeDisplay.getCompanyId(),

@@ -232,7 +232,7 @@ public class WorkflowOutputUtils {
 					? Boolean.valueOf(postback) : false);
 				workflowOutput.setPattern(pattern);
 
-				WorkflowOutputLocalServiceUtil.updateWorkflowOutput(workflowOutput);
+				WorkflowOutputLocalServiceUtil.addWorkflowOutput(workflowOutput);
 
 				ExpandoValueLocalServiceUtil.addValue(
 					themeDisplay.getCompanyId(), WebKeys.WORKFLOW_OUTPUT,

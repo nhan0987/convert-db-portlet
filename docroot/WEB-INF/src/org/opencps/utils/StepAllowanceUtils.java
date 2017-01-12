@@ -194,7 +194,7 @@ public class StepAllowanceUtils {
 					stepAllowance.setReadOnly(Validator.isNotNull(readOnly)
 						? Boolean.valueOf(readOnly) : true);
 
-					StepAllowanceLocalServiceUtil.updateStepAllowance(stepAllowance);
+					StepAllowanceLocalServiceUtil.addStepAllowance(stepAllowance);
 
 					_log.info("=====add Success===stepAllowanceId:" + stepAllowanceId);
 				}

@@ -509,7 +509,7 @@ public class ServiceConfigUtils {
 							serviceConfig.setGovAgencyIndex(govAgencyIndex);
 						}
 
-						ServiceConfigLocalServiceUtil.updateServiceConfig(serviceConfig);
+						ServiceConfigLocalServiceUtil.addServiceConfig(serviceConfig);
 
 						ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.SERVICE_CONFIG,
