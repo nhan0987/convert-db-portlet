@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd">
+<service-builder package-path="org.opencps.modifier">
+	<author>nhanhoang</author>
+	<namespace>userex</namespace>
+
+	<entity name="UsersOrgs" local-service="true" remote-service="false" table="users_orgs">
+
+		<!-- PK fields -->
+
+		<column name="organizationId" type="long" primary="true" />
+		<column name="userId" type="long" primary="true" />
+
+		<finder return-type="UsersOrgs" name="Orgs_Users" >
+			<finder-column name="organizationId" />
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+	<entity name="UsersRoles" local-service="true" remote-service="false" table="users_roles">
+
+		<column name="roleId" type="long" primary="true" />
+		<column name="userId" type="long" primary="true" />
+
+		<!-- Finder methods -->
+
+		<finder return-type="UsersRoles" name="Roles_Users" >
+			<finder-column name="roleId" />
+			<finder-column name="userId" />
+		</finder>
+	</entity>
+	<entity name="WorkJob" local-service="true" remote-service="false" table="opencps_workingunit_jobpos">
+
+		<column name="jobPosId" type="long" primary="true" />
+		<column name="workingUnitId" type="long" primary="true" />
+
+		<!-- Finder methods -->
+
+		<finder return-type="WorkJob" name="Work_Job" >
+			<finder-column name="jobPosId" />
+			<finder-column name="workingUnitId" />
+		</finder>
+	</entity>
+	<entity name="EmployeeJob" local-service="true" remote-service="false" table="opencps_employee_jobpos">
+
+		<column name="employeeId" type="long" primary="true" />
+		<column name="jobPosId" type="long" primary="true" />
+
+		<!-- Finder methods -->
+
+		<finder return-type="EmployeeJob" name="Employee_Job" >
+			<finder-column name="employeeId" />
+			<finder-column name="jobPosId" />
+		</finder>
+	</entity>
+
+</service-builder>

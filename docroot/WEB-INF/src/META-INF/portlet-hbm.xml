@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false" auto-import="false">
+	<import class="org.opencps.modifier.model.EmployeeJob" />
+	<import class="org.opencps.modifier.model.UsersOrgs" />
+	<import class="org.opencps.modifier.model.UsersRoles" />
+	<import class="org.opencps.modifier.model.WorkJob" />
+	<import class="org.opencps.expando.model.DomainConfigExt" />
+	<import class="org.opencps.expando.model.ExpandoExt" />
+	<import class="org.opencps.expando.model.FileEntryDossierFile" />
+	<class name="org.opencps.modifier.model.impl.EmployeeJobImpl" table="opencps_employee_jobpos">
+		<cache usage="read-write" />
+		<composite-id name="primaryKey" class="org.opencps.modifier.service.persistence.EmployeeJobPK">
+			<key-property name="employeeId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+			<key-property name="jobPosId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		</composite-id>
+	</class>
+	<class name="org.opencps.modifier.model.impl.UsersOrgsImpl" table="users_orgs">
+		<cache usage="read-write" />
+		<composite-id name="primaryKey" class="org.opencps.modifier.service.persistence.UsersOrgsPK">
+			<key-property name="organizationId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+			<key-property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		</composite-id>
+	</class>
+	<class name="org.opencps.modifier.model.impl.UsersRolesImpl" table="users_roles">
+		<cache usage="read-write" />
+		<composite-id name="primaryKey" class="org.opencps.modifier.service.persistence.UsersRolesPK">
+			<key-property name="roleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+			<key-property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		</composite-id>
+	</class>
+	<class name="org.opencps.modifier.model.impl.WorkJobImpl" table="opencps_workingunit_jobpos">
+		<cache usage="read-write" />
+		<composite-id name="primaryKey" class="org.opencps.modifier.service.persistence.WorkJobPK">
+			<key-property name="jobPosId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+			<key-property name="workingUnitId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		</composite-id>
+	</class>
+	<class name="org.opencps.expando.model.impl.DomainConfigExtImpl" table="opencps_domain_target">
+		<cache usage="read-write" />
+		<id name="domainConfigId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="targetDomain" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="password" type="com.liferay.portal.dao.orm.hibernate.StringType" column="password_" />
+	</class>
+	<class name="org.opencps.expando.model.impl.ExpandoExtImpl" table="expandotable">
+		<cache usage="read-write" />
+		<id name="tableId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classNameId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+	</class>
+	<class name="org.opencps.expando.model.impl.FileEntryDossierFileImpl" table="opencps_fileentry_dossierFile">
+		<cache usage="read-write" />
+		<composite-id name="primaryKey" class="org.opencps.expando.service.persistence.FileEntryDossierFilePK">
+			<key-property name="fileEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+			<key-property name="dossierFileId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		</composite-id>
+	</class>
+</hibernate-mapping>

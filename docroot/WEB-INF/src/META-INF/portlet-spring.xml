@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="org.opencps.modifier.service.EmployeeJobLocalService" class="org.opencps.modifier.service.impl.EmployeeJobLocalServiceImpl" />
+	<bean id="org.opencps.modifier.service.persistence.EmployeeJobPersistence" class="org.opencps.modifier.service.persistence.EmployeeJobPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.modifier.service.UsersOrgsLocalService" class="org.opencps.modifier.service.impl.UsersOrgsLocalServiceImpl" />
+	<bean id="org.opencps.modifier.service.persistence.UsersOrgsPersistence" class="org.opencps.modifier.service.persistence.UsersOrgsPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.modifier.service.UsersRolesLocalService" class="org.opencps.modifier.service.impl.UsersRolesLocalServiceImpl" />
+	<bean id="org.opencps.modifier.service.persistence.UsersRolesPersistence" class="org.opencps.modifier.service.persistence.UsersRolesPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.modifier.service.WorkJobLocalService" class="org.opencps.modifier.service.impl.WorkJobLocalServiceImpl" />
+	<bean id="org.opencps.modifier.service.persistence.WorkJobPersistence" class="org.opencps.modifier.service.persistence.WorkJobPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.expando.service.DomainConfigExtLocalService" class="org.opencps.expando.service.impl.DomainConfigExtLocalServiceImpl" />
+	<bean id="org.opencps.expando.service.persistence.DomainConfigExtPersistence" class="org.opencps.expando.service.persistence.DomainConfigExtPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.expando.service.ExpandoExtLocalService" class="org.opencps.expando.service.impl.ExpandoExtLocalServiceImpl" />
+	<bean id="org.opencps.expando.service.persistence.ExpandoExtPersistence" class="org.opencps.expando.service.persistence.ExpandoExtPersistenceImpl" parent="basePersistence" />
+	<bean id="org.opencps.expando.service.FileEntryDossierFileLocalService" class="org.opencps.expando.service.impl.FileEntryDossierFileLocalServiceImpl" />
+	<bean id="org.opencps.expando.service.persistence.FileEntryDossierFilePersistence" class="org.opencps.expando.service.persistence.FileEntryDossierFilePersistenceImpl" parent="basePersistence" />
+</beans>

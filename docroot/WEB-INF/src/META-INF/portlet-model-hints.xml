@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="org.opencps.modifier.model.EmployeeJob">
+		<field name="employeeId" type="long" />
+		<field name="jobPosId" type="long" />
+	</model>
+	<model name="org.opencps.modifier.model.UsersOrgs">
+		<field name="organizationId" type="long" />
+		<field name="userId" type="long" />
+	</model>
+	<model name="org.opencps.modifier.model.UsersRoles">
+		<field name="roleId" type="long" />
+		<field name="userId" type="long" />
+	</model>
+	<model name="org.opencps.modifier.model.WorkJob">
+		<field name="jobPosId" type="long" />
+		<field name="workingUnitId" type="long" />
+	</model>
+	<model name="org.opencps.expando.model.DomainConfigExt">
+		<field name="domainConfigId" type="long" />
+		<field name="targetDomain" type="String" />
+		<field name="userName" type="String" />
+		<field name="password" type="String" />
+	</model>
+	<model name="org.opencps.expando.model.ExpandoExt">
+		<field name="tableId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="classNameId" type="long" />
+		<field name="name" type="String" />
+	</model>
+	<model name="org.opencps.expando.model.FileEntryDossierFile">
+		<field name="fileEntryId" type="long" />
+		<field name="dossierFileId" type="long" />
+	</model>
+</model-hints>

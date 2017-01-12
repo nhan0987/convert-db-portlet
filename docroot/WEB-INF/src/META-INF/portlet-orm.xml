@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<xml-mapping-metadata-complete/>
+		<persistence-unit-defaults>
+			<access>PROPERTY</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<mapped-superclass class="org.opencps.modifier.model.impl.EmployeeJobModelImpl">
+		<id-class class="org.opencps.modifier.service.persistence.EmployeeJobPK" />
+		<attributes>
+			<id name="employeeId" />
+			<id name="jobPosId" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.modifier.model.impl.UsersOrgsModelImpl">
+		<id-class class="org.opencps.modifier.service.persistence.UsersOrgsPK" />
+		<attributes>
+			<id name="organizationId" />
+			<id name="userId" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.modifier.model.impl.UsersRolesModelImpl">
+		<id-class class="org.opencps.modifier.service.persistence.UsersRolesPK" />
+		<attributes>
+			<id name="roleId" />
+			<id name="userId" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.modifier.model.impl.WorkJobModelImpl">
+		<id-class class="org.opencps.modifier.service.persistence.WorkJobPK" />
+		<attributes>
+			<id name="jobPosId" />
+			<id name="workingUnitId" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.expando.model.impl.DomainConfigExtModelImpl">
+		<attributes>
+			<id name="domainConfigId" />
+			<basic name="targetDomain" />
+			<basic name="userName" />
+			<basic name="password">
+				<column name="PASSWORD_" />
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.expando.model.impl.ExpandoExtModelImpl">
+		<attributes>
+			<id name="tableId" />
+			<basic name="companyId" />
+			<basic name="classNameId" />
+			<basic name="name" />
+			<transient name="className" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="org.opencps.expando.model.impl.FileEntryDossierFileModelImpl">
+		<id-class class="org.opencps.expando.service.persistence.FileEntryDossierFilePK" />
+		<attributes>
+			<id name="fileEntryId" />
+			<id name="dossierFileId" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<entity class="org.opencps.modifier.model.impl.EmployeeJobImpl" name="EmployeeJob">
+		<table name="opencps_employee_jobpos" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.modifier.model.impl.UsersOrgsImpl" name="UsersOrgs">
+		<table name="users_orgs" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.modifier.model.impl.UsersRolesImpl" name="UsersRoles">
+		<table name="users_roles" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.modifier.model.impl.WorkJobImpl" name="WorkJob">
+		<table name="opencps_workingunit_jobpos" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.expando.model.impl.DomainConfigExtImpl" name="DomainConfigExt">
+		<table name="opencps_domain_target" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.expando.model.impl.ExpandoExtImpl" name="ExpandoExt">
+		<table name="expandotable" />
+		<attributes />
+	</entity>
+	<entity class="org.opencps.expando.model.impl.FileEntryDossierFileImpl" name="FileEntryDossierFile">
+		<table name="opencps_fileentry_dossierFile" />
+		<attributes />
+	</entity>
+</entity-mappings>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<beans default-destroy-method="destroy" default-init-method="afterPropertiesSet"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Listeners -->
+	<bean id="opencps.listener.datalistener" class="org.opencps.datamgt.listener.DataListener" />
+
+
+	<!-- Destinations -->
+
+
+	<bean id="opencps.datamgt.destination" class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="opencps/datalistener" />
+	</bean>
+
+	<!-- Configurator -->
+	<bean id="messagingConfigurator"
+		class="com.liferay.portal.kernel.messaging.config.PluginMessagingConfigurator">
+		<property name="messageListeners">
+			<map key-type="java.lang.String" value-type="java.util.List">
+
+				<entry key="opencps/datalistener">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="opencps.listener.datalistener" />
+					</list>
+				</entry>
+			</map>
+		</property>
+		<property name="destinations">
+			<list>
+				<ref bean="opencps.datamgt.destination" />
+			</list>
+		</property>
+	</bean>
+</beans>
