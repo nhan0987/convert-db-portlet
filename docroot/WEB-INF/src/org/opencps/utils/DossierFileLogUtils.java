@@ -407,137 +407,142 @@ public class DossierFileLogUtils {
 
 				long companyId = themeDisplay.getCompanyId();
 
-				List<DossierFileLog> List = DossierFileLogLocalServiceUtil
-						.getFileLogs(dossierLogId, dossierId);
-				CommonUtils commonUtils = new CommonUtils();
+				List<DossierFileLog> List = new ArrayList<DossierFileLog>();
+				List = DossierFileLogLocalServiceUtil.getFileLogs(dossierLogId,
+						dossierId);
 
-				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
-						WebKeys.EXTableName_DOSSIER_FILE_LOG,
-						WebKeys.DOSSIER_FILE_LOG,
-						WebKeys.DOSSIER_FILE_LOGColumns);
+				if (List.size() > 0) {
+					CommonUtils commonUtils = new CommonUtils();
 
-				int i = 1;
-				for (DossierFileLog object : List) {
-
-					_log.info("*i:" + i);
-
-					ExpandoRowLocalServiceUtil.addRow(
-							expandoTable.getTableId(),
-							object.getDossierFileLogId());
-
-					JSONObject columnNames = WebKeys
-							.getDOSSIER_FILE_LOGColumnNames();
-
-					ExpandoValueLocalServiceUtil.addValue(companyId,
+					ExpandoTable expandoTable = commonUtils.checkTable(
+							companyId, WebKeys.EXTableName_DOSSIER_FILE_LOG,
 							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("userId"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getUserId()));
+							WebKeys.DOSSIER_FILE_LOGColumns);
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("userName"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getUserName()));
+					int i = 1;
+					for (DossierFileLog object : List) {
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG, columnNames
-									.getString("modifiedDate"), object
-									.getDossierFileLogId(), DateTimeUtil
-									.convertDateToString(
-											object.getModifiedDate(),
-											DateTimeUtil._VN_DATE_TIME_FORMAT));
+						_log.info("*i:" + i);
+						_log.info("=====dossierId:" + dossierId);
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("dossierId"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getDossierId()));
+						ExpandoRowLocalServiceUtil.addRow(
+								expandoTable.getTableId(),
+								object.getDossierFileLogId());
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("stepId"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getStepId()));
+						JSONObject columnNames = WebKeys
+								.getDOSSIER_FILE_LOGColumnNames();
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("isUpdate"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getIsUpdate()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("userId"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getUserId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("fileName"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getFileName()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("userName"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getUserName()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("fileVersion"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getFileVersion()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("modifiedDate"), object
+										.getDossierFileLogId(),
+								DateTimeUtil.convertDateToString(
+										object.getModifiedDate(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("actionCode"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getActionCode()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("dossierId"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getDossierId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("count_"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getCount_()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("stepId"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getStepId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("oid"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getOId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("isUpdate"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getIsUpdate()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("fileEntryId"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getFileEntryId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("fileName"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getFileName()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("logId"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getLogId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("fileVersion"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getFileVersion()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("actor"),
-							object.getDossierFileLogId(),
-							String.valueOf(object.getActor()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("actionCode"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getActionCode()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.DOSSIER_FILE_LOG,
-							WebKeys.EXTableName_DOSSIER_FILE_LOG,
-							columnNames.getString("dossierFileLogIdNew"),
-							object.getDossierFileLogId(), StringPool.BLANK);
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("count_"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getCount_()));
 
-					_log.info("=====DossierFileLogId:"
-							+ object.getDossierFileLogId());
-					i++;
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("oid"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getOId()));
 
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("fileEntryId"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getFileEntryId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("logId"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getLogId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("actor"),
+								object.getDossierFileLogId(),
+								String.valueOf(object.getActor()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.DOSSIER_FILE_LOG,
+								WebKeys.EXTableName_DOSSIER_FILE_LOG,
+								columnNames.getString("dossierFileLogIdNew"),
+								object.getDossierFileLogId(), StringPool.BLANK);
+
+						_log.info("=====dossierFileLogId:"
+								+ object.getDossierFileLogId());
+						i++;
+
+					}
 				}
 			}
 		} catch (Exception e) {

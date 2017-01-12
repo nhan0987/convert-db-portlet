@@ -9,6 +9,8 @@ import javax.portlet.ActionResponse;
 
 import org.opencps.accountmgt.model.Business;
 import org.opencps.accountmgt.model.Citizen;
+import org.opencps.dossiermgt.NoSuchDossierException;
+import org.opencps.dossiermgt.NoSuchServiceConfigException;
 import org.opencps.dossiermgt.model.Dossier;
 import org.opencps.dossiermgt.model.ServiceConfig;
 import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
@@ -691,24 +693,34 @@ public class DossierUtils {
 				long companyId = themeDisplay.getCompanyId();
 
 				Dossier object = null;
-				object = DossierLocalServiceUtil.getDossier(dossierId);
 
-				CommonUtils commonUtils = new CommonUtils();
+				try {
+					object = DossierLocalServiceUtil.getDossier(dossierId);
+				} catch (NoSuchDossierException e) {
 
-				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
-						WebKeys.EXTableName_DOSSIER, WebKeys.DOSSIER,
-						WebKeys.DOSSIERColumns);
+				}
 
 				if (Validator.isNotNull(object)) {
 
 					ServiceConfig serviceConfig = null;
 
 					if (object.getServiceConfigId() > 0) {
+						
+						try{
 
 						serviceConfig = ServiceConfigLocalServiceUtil
 								.getServiceConfig(object.getServiceConfigId());
+						}catch(NoSuchServiceConfigException e){
+							
+						}
 
 						if (Validator.isNotNull(serviceConfig)) {
+
+							CommonUtils commonUtils = new CommonUtils();
+
+							ExpandoTable expandoTable = commonUtils.checkTable(
+									companyId, WebKeys.EXTableName_DOSSIER,
+									WebKeys.DOSSIER, WebKeys.DOSSIERColumns);
 
 							ExpandoRowLocalServiceUtil.addRow(
 									expandoTable.getTableId(),
@@ -942,16 +954,19 @@ public class DossierUtils {
 									object.getDossierId(), StringPool.BLANK);
 
 							_log.info("=====DossierId:" + object.getDossierId());
-							
+
 							DossierFileUtils dossierFileUtils = new DossierFileUtils();
-							dossierFileUtils.fetchDossierFile2(themeDisplay, object.getDossierId());
-							
+							dossierFileUtils.fetchDossierFile2(themeDisplay,
+									object.getDossierId());
+
 							DossierLogUtils dossierLogUtils = new DossierLogUtils();
-							dossierLogUtils.fetchDossierLog2(themeDisplay, object.getDossierId());
-							
+							dossierLogUtils.fetchDossierLog2(themeDisplay,
+									object.getDossierId());
+
 							PaymentFileUtils paymentFileUtils = new PaymentFileUtils();
-							paymentFileUtils.fetchPaymentFiles2(themeDisplay, object.getDossierId());
-							
+							paymentFileUtils.fetchPaymentFiles2(themeDisplay,
+									object.getDossierId());
+
 							return true;
 						}
 
@@ -961,7 +976,7 @@ public class DossierUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 }

@@ -359,7 +359,7 @@ public class ProcessOrderUtils {
 	}
 
 	public void fetchProcessOrders2(ActionRequest actionRequest,
-			ActionResponse actionResponse){
+			ActionResponse actionResponse) {
 
 		try {
 
@@ -382,15 +382,17 @@ public class ProcessOrderUtils {
 
 				_log.info("*i:" + i);
 
-				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
-						object.getProcessOrderId());
-
-				JSONObject columnNames = WebKeys.getPROCESS_ORDERColumnNames();
-
 				DossierUtils dossierUtils = new DossierUtils();
 
 				if (dossierUtils.fetchDossiers2(themeDisplay,
 						object.getDossierId())) {
+
+					ExpandoRowLocalServiceUtil.addRow(
+							expandoTable.getTableId(),
+							object.getProcessOrderId());
+
+					JSONObject columnNames = WebKeys
+							.getPROCESS_ORDERColumnNames();
 
 					ExpandoValueLocalServiceUtil.addValue(companyId,
 							WebKeys.PROCESS_ORDER,
@@ -481,8 +483,12 @@ public class ProcessOrderUtils {
 							columnNames.getString("processOrderIdNew"),
 							object.getProcessOrderId(), StringPool.BLANK);
 
-					_log.info("=====ProcessOrderId:"
+					_log.info("=====rocessOrderId:"
 							+ object.getProcessOrderId());
+
+					ActionHistoryUtils actionHistoryUtils = new ActionHistoryUtils();
+					actionHistoryUtils.fetchActionhistory2(themeDisplay,
+							object.getProcessOrderId());
 
 				}
 				i++;

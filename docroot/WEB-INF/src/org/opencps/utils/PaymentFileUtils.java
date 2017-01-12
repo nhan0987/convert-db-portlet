@@ -8,8 +8,6 @@ import javax.portlet.ActionResponse;
 
 import org.opencps.paymentmgt.model.PaymentFile;
 import org.opencps.paymentmgt.service.PaymentFileLocalServiceUtil;
-import org.opencps.processmgt.model.ProcessOrder;
-import org.opencps.processmgt.service.ProcessOrderLocalServiceUtil;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -603,234 +601,248 @@ public class PaymentFileUtils {
 
 				long companyId = themeDisplay.getCompanyId();
 
-				List<PaymentFile> List = PaymentFileLocalServiceUtil
+				List<PaymentFile> List = new ArrayList<PaymentFile>();
+				List = PaymentFileLocalServiceUtil
 						.getPaymentFileByD_(dossierId);
 
-				CommonUtils commonUtils = new CommonUtils();
+				if (List.size() > 0) {
 
-				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
-						WebKeys.EXTableName_PAYMENT_FILE, WebKeys.PAYMENT_FILE,
-						WebKeys.PAYMENT_FILEColumns);
+					CommonUtils commonUtils = new CommonUtils();
 
-				int i = 1;
-				for (PaymentFile object : List) {
+					ExpandoTable expandoTable = commonUtils.checkTable(
+							companyId, WebKeys.EXTableName_PAYMENT_FILE,
+							WebKeys.PAYMENT_FILE, WebKeys.PAYMENT_FILEColumns);
 
-					_log.info("*i:" + i);
+					int i = 1;
+					for (PaymentFile object : List) {
 
-					ExpandoRowLocalServiceUtil.addRow(
-							expandoTable.getTableId(),
-							object.getPaymentFileId());
+						_log.info("*i:" + i);
+						_log.info("=====dossierId:" + dossierId);
 
-					JSONObject columnNames = WebKeys
-							.getPAYMENT_FILEColumnNames();
+						ExpandoRowLocalServiceUtil.addRow(
+								expandoTable.getTableId(),
+								object.getPaymentFileId());
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE, columnNames
-									.getString("createDate"), object
-									.getPaymentFileId(), DateTimeUtil
-									.convertDateToString(
-											object.getCreateDate(),
-											DateTimeUtil._VN_DATE_TIME_FORMAT));
+						JSONObject columnNames = WebKeys
+								.getPAYMENT_FILEColumnNames();
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE, columnNames
-									.getString("modifiedDate"), object
-									.getPaymentFileId(), DateTimeUtil
-									.convertDateToString(
-											object.getModifiedDate(),
-											DateTimeUtil._VN_DATE_TIME_FORMAT));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("createDate"), object
+										.getPaymentFileId(),
+								DateTimeUtil.convertDateToString(
+										object.getCreateDate(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE, columnNames
-									.getString("requestDateTime"), object
-									.getPaymentFileId(), DateTimeUtil
-									.convertDateToString(
-											object.getRequestDatetime(),
-											DateTimeUtil._VN_DATE_TIME_FORMAT));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("modifiedDate"), object
+										.getPaymentFileId(),
+								DateTimeUtil.convertDateToString(
+										object.getModifiedDate(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE, columnNames
-									.getString("confirmDateTime"), object
-									.getPaymentFileId(), DateTimeUtil
-									.convertDateToString(
-											object.getConfirmDatetime(),
-											DateTimeUtil._VN_DATE_TIME_FORMAT));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("requestDateTime"), object
+										.getPaymentFileId(),
+								DateTimeUtil.convertDateToString(
+										object.getRequestDatetime(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("dossierId"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getDossierId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("confirmDateTime"), object
+										.getPaymentFileId(),
+								DateTimeUtil.convertDateToString(
+										object.getConfirmDatetime(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("ownerUserId"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getOwnerUserId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("dossierId"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getDossierId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("ownerOrganizationId"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getOwnerOrganizationId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("ownerUserId"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getOwnerUserId()));
 
-					ExpandoValueLocalServiceUtil
-							.addValue(
-									companyId,
-									WebKeys.PAYMENT_FILE,
-									WebKeys.EXTableName_PAYMENT_FILE,
-									columnNames
-											.getString("govAgencyOrganizationId"),
-									object.getPaymentFileId(),
-									String.valueOf(object
-											.getGovAgencyOrganizationId()));
+						ExpandoValueLocalServiceUtil
+								.addValue(
+										companyId,
+										WebKeys.PAYMENT_FILE,
+										WebKeys.EXTableName_PAYMENT_FILE,
+										columnNames
+												.getString("ownerOrganizationId"),
+										object.getPaymentFileId(),
+										String.valueOf(object
+												.getOwnerOrganizationId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentName"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentName()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("govAgencyOrganizationId"),
+								object.getPaymentFileId(), String
+										.valueOf(object
+												.getGovAgencyOrganizationId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("amount"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getAmount()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentName"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getPaymentName()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("requestNote"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getRequestNote()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("amount"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getAmount()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("keypayUrl"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getKeypayUrl()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("requestNote"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getRequestNote()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("keypayTransaction"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getKeypayTransactionId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("keypayUrl"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getKeypayUrl()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("keypayGoodCode"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getKeypayGoodCode()));
+						ExpandoValueLocalServiceUtil
+								.addValue(
+										companyId,
+										WebKeys.PAYMENT_FILE,
+										WebKeys.EXTableName_PAYMENT_FILE,
+										columnNames
+												.getString("keypayTransaction"),
+										object.getPaymentFileId(),
+										String.valueOf(object
+												.getKeypayTransactionId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("keypayMerchantCode"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getKeypayMerchantCode()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("keypayGoodCode"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getKeypayGoodCode()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentStatus"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentStatus()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("keypayMerchantCode"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getKeypayMerchantCode()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentMethod"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentMethod()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentStatus"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getPaymentStatus()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("confirmFileEntryId"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getConfirmFileEntryId()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentMethod"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getPaymentMethod()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentOptions"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentOptions()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("confirmFileEntryId"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getConfirmFileEntryId()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("syncStatus"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getSyncStatus()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentOptions"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getPaymentOptions()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("oid"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getOid()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("syncStatus"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getSyncStatus()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentConfigId"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentConfig()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("oid"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getOid()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentGateStatusCode"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentGateStatusCode()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentConfigId"),
+								object.getPaymentFileId(),
+								String.valueOf(object.getPaymentConfig()));
 
-					ExpandoValueLocalServiceUtil
-							.addValue(
-									companyId,
-									WebKeys.PAYMENT_FILE,
-									WebKeys.EXTableName_PAYMENT_FILE,
-									columnNames
-											.getString("paymentGateResponseCode"),
-									object.getPaymentFileId(),
-									String.valueOf(object
-											.getPaymentGateResponseData()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("paymentGateStatusCode"),
+								object.getPaymentFileId(), String
+										.valueOf(object
+												.getPaymentGateStatusCode()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentGateCheckCode"),
-							object.getPaymentFileId(),
-							String.valueOf(object.getPaymentGateCheckCode()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("paymentGateResponseCode"),
+								object.getPaymentFileId(), String
+										.valueOf(object
+												.getPaymentGateResponseData()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE, columnNames
-									.getString("paymentGateCheckResponseData"),
-							object.getPaymentFileId(), String.valueOf(object
-									.getPaymentGateCheckResponseData()));
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE, columnNames
+										.getString("paymentGateCheckCode"),
+								object.getPaymentFileId(), String
+										.valueOf(object
+												.getPaymentGateCheckCode()));
 
-					ExpandoValueLocalServiceUtil.addValue(companyId,
-							WebKeys.PAYMENT_FILE,
-							WebKeys.EXTableName_PAYMENT_FILE,
-							columnNames.getString("paymentFileIdNew"),
-							object.getPaymentFileId(), StringPool.BLANK);
+						ExpandoValueLocalServiceUtil
+								.addValue(
+										companyId,
+										WebKeys.PAYMENT_FILE,
+										WebKeys.EXTableName_PAYMENT_FILE,
+										columnNames
+												.getString("paymentGateCheckResponseData"),
+										object.getPaymentFileId(),
+										String.valueOf(object
+												.getPaymentGateCheckResponseData()));
 
-					_log.info("=====PaymentFileId:" + object.getPaymentFileId());
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.PAYMENT_FILE,
+								WebKeys.EXTableName_PAYMENT_FILE,
+								columnNames.getString("paymentFileIdNew"),
+								object.getPaymentFileId(), StringPool.BLANK);
 
-					i++;
+						_log.info("=====paymentFileId:"
+								+ object.getPaymentFileId());
+
+						i++;
+					}
 				}
 			}
 		} catch (Exception e) {

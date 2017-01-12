@@ -329,4 +329,131 @@ public class ActionHistoryUtils {
 			e.printStackTrace();
 		}
 	}
+
+	public void fetchActionhistory2(ThemeDisplay themeDisplay,
+			long processOrderId) {
+
+		try {
+
+			if (processOrderId > 0) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				List<ActionHistory> List = new ArrayList<ActionHistory>();
+				
+				List = ActionHistoryLocalServiceUtil
+						.getActionHistoriesByG_PORD(
+								themeDisplay.getScopeGroupId(), processOrderId,
+								QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+				if (List.size() > 0) {
+
+					CommonUtils commonUtils = new CommonUtils();
+
+					ExpandoTable expandoTable = commonUtils.checkTable(
+							companyId, WebKeys.EXTableName_ACTION_HISTORY,
+							WebKeys.ACTION_HISTORY,
+							WebKeys.ACTION_HISTORYColumns);
+
+					int i = 1;
+					for (ActionHistory object : List) {
+
+						_log.info("*i:" + i);
+						_log.info("=====processOrderId:" + processOrderId);
+						ExpandoRowLocalServiceUtil.addRow(
+								expandoTable.getTableId(),
+								object.getActionHistoryId());
+
+						JSONObject columnNames = WebKeys
+								.getACTION_HISTORYColumnNames();
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("processOrderId"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getProcessOrderId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY, columnNames
+										.getString("actionDateTime"), object
+										.getActionHistoryId(),
+								DateTimeUtil.convertDateToString(
+										object.getActionDatetime(),
+										DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("processWorkflowId"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getProcessWorkflowId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("stepName"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getStepName()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("actionName"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getActionName()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("actionNote"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getActionNote()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("actionUserId"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getActionUserId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("logId"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getLogId()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("dayDoing"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getDaysDoing()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("dayDelay"),
+								object.getActionHistoryId(),
+								String.valueOf(object.getDaysDelay()));
+
+						ExpandoValueLocalServiceUtil.addValue(companyId,
+								WebKeys.ACTION_HISTORY,
+								WebKeys.EXTableName_ACTION_HISTORY,
+								columnNames.getString("actionHistoryIdNew"),
+								object.getActionHistoryId(), StringPool.BLANK);
+
+						_log.info("=====actionHistoryId:"
+								+ object.getActionHistoryId());
+						i++;
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
