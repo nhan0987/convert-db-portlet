@@ -33,7 +33,6 @@ import org.opencps.dossiermgt.service.DossierTemplateLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.expando.model.DomainConfigExt;
 import org.opencps.expando.service.ExpandoExtLocalServiceUtil;
-import org.opencps.paymentmgt.NoSuchPaymentFileException;
 import org.opencps.paymentmgt.model.PaymentFile;
 import org.opencps.paymentmgt.service.PaymentFileLocalServiceUtil;
 import org.opencps.processmgt.NoSuchProcessOrderException;
@@ -1176,6 +1175,307 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		}
 	}
 
+	
+	public void fetchByService(ActionRequest actionRequest,
+			ActionResponse actionResponse) {
+
+		String serviceDomain1 = ParamUtil.getString(actionRequest,
+				"serviceDomain");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+				.getAttribute(WebKeys.THEME_DISPLAY);
+
+		String[] arrayserviceDomain = StringUtil.split(serviceDomain1.trim(),
+				StringPool.PIPE);
+
+		List<String> serviceDomainList = Arrays.asList(arrayserviceDomain);
+
+		try {
+
+			if (serviceDomainList.size() > 0) {
+
+				for (int i = 0; i < serviceDomainList.size(); i++) {
+
+					DictItem dictItem_svDomain = null;
+					DictCollection dictCol_svDomain = null;
+					String serviceDomain = StringPool.BLANK;
+
+					serviceDomain = serviceDomainList.get(i);
+
+					try {
+
+						dictCol_svDomain = DictCollectionLocalServiceUtil
+								.getDictCollection(
+										themeDisplay.getScopeGroupId(),
+										WebKeys.SERVICE_DOMAIN);
+					} catch (NoSuchDictCollectionException e) {
+
+					}
+
+					if (Validator.isNotNull(dictCol_svDomain)) {
+
+						try {
+
+							dictItem_svDomain = DictItemLocalServiceUtil
+									.getDictItemInuseByItemCode(
+											dictCol_svDomain
+													.getDictCollectionId(),
+											serviceDomain);
+						} catch (NoSuchDictItemException e) {
+
+						}
+
+						if (Validator.isNotNull(dictItem_svDomain)) {
+
+							List<ServiceInfo> serviceInfoList = new ArrayList<ServiceInfo>();
+
+							serviceInfoList = ServiceInfoLocalServiceUtil
+									.getServiceInFosByG_DI(
+											themeDisplay.getScopeGroupId(),
+											dictItem_svDomain.getTreeIndex());
+
+							if (serviceInfoList.size() > 0) {
+
+								for (ServiceInfo serviceInfo : serviceInfoList) {
+
+									// /////////////////////////////
+									List<ServiceFileTemplate> serviceFileTemplateList = new ArrayList<ServiceFileTemplate>();
+
+									serviceFileTemplateList = ServiceFileTemplateLocalServiceUtil
+											.getServiceFileTemplatesByServiceInfo(serviceInfo
+													.getServiceinfoId());
+
+									_log.info("=====serviceInfo.getServiceinfoId():"
+											+ serviceInfo.getServiceinfoId());
+
+									if (serviceFileTemplateList.size() > 0) {
+
+										for (ServiceFileTemplate serviceFileTemplate : serviceFileTemplateList) {
+
+											_log.info("=====serviceFileTemplate.getServiceinfoId():"
+													+ serviceFileTemplate
+															.getServiceinfoId());
+											_log.info("=====serviceFileTemplate.getTemplatefileId():"
+													+ serviceFileTemplate
+															.getTemplatefileId());
+
+											try {
+												TemplateFileLocalServiceUtil
+														.deleteTemplateFile(serviceFileTemplate
+																.getTemplatefileId());
+											} catch (Exception e) {
+
+											}
+
+											ServiceFileTemplateLocalServiceUtil
+													.deleteServiceFileTemplate(serviceFileTemplate);
+										}
+									}
+
+									// /////////////////////////////
+
+									List<ServiceConfig> serviceConfigList = new ArrayList<ServiceConfig>();
+
+									serviceConfigList = ServiceConfigLocalServiceUtil
+											.getServiceConfigsByS_G(serviceInfo
+													.getServiceinfoId(),
+													themeDisplay
+															.getScopeGroupId());
+
+									if (serviceConfigList.size() > 0) {
+
+										for (ServiceConfig serviceConfig : serviceConfigList) {
+
+											DossierTemplate dossierTemplate = null;
+
+											try {
+
+												dossierTemplate = DossierTemplateLocalServiceUtil
+														.getDossierTemplate(serviceConfig
+																.getDossierTemplateId());
+											} catch (Exception e) {
+
+											}
+
+											if (Validator
+													.isNotNull(dossierTemplate)) {
+
+												List<DossierPart> dossierPartList = new ArrayList<DossierPart>();
+
+												dossierPartList = DossierPartLocalServiceUtil
+														.getDossierParts(dossierTemplate
+																.getDossierTemplateId());
+
+												if (dossierPartList.size() > 0) {
+
+													for (DossierPart dossierPart : dossierPartList) {
+
+														DossierPartLocalServiceUtil
+																.deleteDossierPart(dossierPart);
+
+													}
+												}
+												DossierTemplateLocalServiceUtil
+														.deleteDossierTemplate(dossierTemplate);
+											}
+
+											// ///////////////////////////////
+
+											ServiceProcess serviceProcess = null;
+
+											try {
+
+												serviceProcess = ServiceProcessLocalServiceUtil
+														.getServiceProcess(serviceConfig
+																.getServiceProcessId());
+											} catch (Exception e) {
+
+											}
+
+											if (Validator
+													.isNotNull(serviceProcess)) {
+
+												// //////////////////////////////
+
+												List<ProcessWorkflow> processWorkflowList = new ArrayList<ProcessWorkflow>();
+
+												processWorkflowList = ProcessWorkflowLocalServiceUtil
+														.getWorkFlowByProcess(serviceProcess
+																.getServiceProcessId());
+
+												if (processWorkflowList.size() > 0) {
+
+													for (ProcessWorkflow processWorkflow : processWorkflowList) {
+
+														List<WorkflowOutput> workflowOutputList = new ArrayList<WorkflowOutput>();
+
+														try {
+
+															workflowOutputList = WorkflowOutputLocalServiceUtil
+																	.getByProcessWF(processWorkflow
+																			.getProcessWorkflowId());
+														} catch (Exception e) {
+
+														}
+
+														if (workflowOutputList
+																.size() > 0) {
+
+															for (WorkflowOutput workflowOutput : workflowOutputList) {
+
+																WorkflowOutputLocalServiceUtil
+																		.deleteWorkflowOutput(workflowOutput
+																				.getWorkflowOutputId());
+															}
+														}
+														ProcessWorkflowLocalServiceUtil
+																.deleteProcessWorkflow(processWorkflow
+																		.getProcessWorkflowId());
+													}
+												}
+
+												// /////////////////////////////
+
+												List<ProcessStep> processStepList = new ArrayList<ProcessStep>();
+
+												try {
+
+													processStepList = ProcessStepLocalServiceUtil
+															.getStepByProcess(serviceProcess
+																	.getServiceProcessId());
+												} catch (Exception e) {
+
+												}
+
+												if (processStepList.size() > 0) {
+
+													for (ProcessStep processStep : processStepList) {
+
+														List<StepAllowance> stepAllowanceList = new ArrayList<StepAllowance>();
+
+														try {
+
+															stepAllowanceList = StepAllowanceLocalServiceUtil
+																	.getByProcessStep(processStep
+																			.getProcessStepId());
+														} catch (Exception e) {
+
+														}
+
+														if (stepAllowanceList
+																.size() > 0) {
+
+															for (StepAllowance stepAllowance : stepAllowanceList) {
+																StepAllowanceLocalServiceUtil
+																		.deleteStepAllowance(stepAllowance);
+															}
+
+														}
+														List<ProcessStepDossierPart> processStepDossierPartList = new ArrayList<ProcessStepDossierPart>();
+
+														try {
+
+															processStepDossierPartList = ProcessStepDossierPartLocalServiceUtil
+																	.getByStep(processStep
+																			.getProcessStepId());
+														} catch (Exception e) {
+
+														}
+
+														if (processStepDossierPartList
+																.size() > 0) {
+
+															for (ProcessStepDossierPart processStepDossierPart : processStepDossierPartList) {
+
+																ProcessStepDossierPartLocalServiceUtil
+																		.deleteProcessStepDossierPart(processStepDossierPart);
+															}
+
+														}
+
+														ProcessStepLocalServiceUtil
+																.deleteProcessStep(processStep
+																		.getProcessStepId());
+													}
+
+												}
+
+												ServiceInfoProcessLocalServiceUtil
+														.deleteServiceInfoProcess(
+																serviceConfig
+																		.getServiceProcessId(),
+																serviceConfig
+																		.getServiceInfoId());
+
+												ServiceProcessLocalServiceUtil
+														.deleteServiceProcess(serviceProcess);
+
+											}
+
+											ServiceConfigLocalServiceUtil
+													.deleteServiceConfig(serviceConfig);
+										}
+									}
+
+									removeDossierContent(themeDisplay,
+											serviceInfo.getServiceinfoId());
+
+									ServiceInfoLocalServiceUtil
+											.deleteServiceInfo(serviceInfo);
+								}
+							}
+							DictItemLocalServiceUtil
+									.deleteDictItem(dictItem_svDomain);
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			_log.error(e);
+		}
+	}
+	
 	public void removeDossierContent(ThemeDisplay themeDisplay,
 			long serviceInfoId) {
 
