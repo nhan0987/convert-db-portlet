@@ -237,4 +237,67 @@ public class ServiceProcessUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fetchServiceProcess2(ThemeDisplay themeDisplay,
+			ServiceProcess object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_ServiceProcess,
+						WebKeys.SERVICE_PROCESS, WebKeys.ServiceProcessColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getServiceProcessId());
+
+				JSONObject ColumnNames = WebKeys.getServiceProcessColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_PROCESS,
+						WebKeys.EXTableName_ServiceProcess,
+						ColumnNames.getString("processNo"),
+						object.getServiceProcessId(),
+						String.valueOf(object.getProcessNo()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_PROCESS,
+						WebKeys.EXTableName_ServiceProcess,
+						ColumnNames.getString("processName"),
+						object.getServiceProcessId(),
+						String.valueOf(object.getProcessName()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_PROCESS,
+						WebKeys.EXTableName_ServiceProcess,
+						ColumnNames.getString("description"),
+						object.getServiceProcessId(),
+						String.valueOf(object.getDescription()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_PROCESS,
+						WebKeys.EXTableName_ServiceProcess,
+						ColumnNames.getString("dossierTemplateId"),
+						object.getServiceProcessId(),
+						String.valueOf(object.getDossierTemplateId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_PROCESS,
+						WebKeys.EXTableName_ServiceProcess,
+						ColumnNames.getString("serviceProcessIdNew"),
+						object.getServiceProcessId(), StringPool.BLANK);
+
+				_log.info("=====ServiceProcessId:"
+						+ object.getServiceProcessId());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

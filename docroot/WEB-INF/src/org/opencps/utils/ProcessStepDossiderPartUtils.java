@@ -188,4 +188,56 @@ public class ProcessStepDossiderPartUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fetchProcessStepDossierPart2(ThemeDisplay themeDisplay,
+			ProcessStepDossierPart object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_ProcessStepDossierPart,
+						WebKeys.PROCESSSTEP_DOSSIERPART,
+						WebKeys.ProcessStepDossierPartColumns);
+
+				long proStepDoPartId = CounterLocalServiceUtil
+						.increment(WebKeys.PROCESSSTEP_DOSSIERPART);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						proStepDoPartId);
+
+				JSONObject columnNames = WebKeys
+						.getProcessStepDossierPartColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESSSTEP_DOSSIERPART,
+						WebKeys.EXTableName_ProcessStepDossierPart,
+						columnNames.getString("processStepId"),
+						proStepDoPartId,
+						String.valueOf(object.getProcessStepId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESSSTEP_DOSSIERPART,
+						WebKeys.EXTableName_ProcessStepDossierPart,
+						columnNames.getString("dossierPartId"),
+						proStepDoPartId,
+						String.valueOf(object.getDossierPartId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESSSTEP_DOSSIERPART,
+						WebKeys.EXTableName_ProcessStepDossierPart,
+						columnNames.getString("readOnly"), proStepDoPartId,
+						String.valueOf(object.getReadOnly()));
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

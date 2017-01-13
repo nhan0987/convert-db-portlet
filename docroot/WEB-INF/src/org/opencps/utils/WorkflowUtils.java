@@ -424,4 +424,160 @@ public class WorkflowUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fetchProcessWorkflow(ThemeDisplay themeDisplay,
+			ProcessWorkflow object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_ProcessWorkflow,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.ProcessWorkflowColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getProcessWorkflowId());
+
+				JSONObject columnNames = WebKeys
+						.getProcessWorkflowColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("serviceProcessId"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getServiceProcessId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("preProcessStepId"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getPreProcessStepId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("postProcessStepId"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getPostProcessStepId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("autoEvent"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getAutoEvent()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("actionName"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getActionName()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("assignUser"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getAssignUser()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("actionUserId"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getActionUserId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("requestPayment"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getRequestPayment()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("paymentFee"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getPaymentFee()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("generateReceptionNo"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getGenerateReceptionNo()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("receptionNoPattern"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getReceptionNoPattern()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("generateDealine"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getGenerateDeadline()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("dealinePattern"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getDeadlinePattern()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("isFinishStep"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getIsFinishStep()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("preCondition"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getPreCondition()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("isMutipled"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getIsMultipled()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("actionCode"),
+						object.getProcessWorkflowId(),
+						String.valueOf(object.getActionCode()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_WORKFLOW,
+						WebKeys.EXTableName_ProcessWorkflow,
+						columnNames.getString("processWorkflowIdNew"),
+						object.getProcessWorkflowId(), StringPool.BLANK);
+
+				_log.info("=====ProcessWorkflowId:"
+						+ object.getProcessWorkflowId());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

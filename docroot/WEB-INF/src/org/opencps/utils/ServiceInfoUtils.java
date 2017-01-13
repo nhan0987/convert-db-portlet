@@ -492,153 +492,109 @@ public class ServiceInfoUtils {
 		}
 	}
 
-	public void fetchServiceInfo2(ThemeDisplay themeDisplay, String treeIndex) {
+	public void fetchServiceInfo2(ThemeDisplay themeDisplay,
+			ServiceInfo serviceInfo) {
 
 		try {
 
-			if (Validator.isNotNull(treeIndex)) {
+			if (Validator.isNotNull(serviceInfo)) {
+				_log.info("=====fetching...serviceInfo");
 
 				long companyId = themeDisplay.getCompanyId();
 
-				List<ServiceInfo> serviceInfoList = new ArrayList<ServiceInfo>();
+				CommonUtils commonUtils = new CommonUtils();
 
-				serviceInfoList = ServiceInfoLocalServiceUtil
-						.getServiceInFosByG_DI(themeDisplay.getScopeGroupId(),
-								treeIndex);
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_SERVICE_INFO, WebKeys.SERVICE_INFO,
+						WebKeys.ServiceInfoColumnNames);
 
-				if (serviceInfoList.size() > 0) {
-					
-					CommonUtils commonUtils = new CommonUtils();
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						serviceInfo.getServiceinfoId());
 
-					ExpandoTable expandoTable = commonUtils.checkTable(
-							companyId, WebKeys.EXTableName_SERVICE_INFO,
-							WebKeys.SERVICE_INFO,
-							WebKeys.ServiceInfoColumnNames);
-					int i = 1;
+				JSONObject serviceInfoColumnNames = WebKeys
+						.getServiceInfoColumnNames();
 
-					_log.info("=====fetching...serviceInfo");
-					for (ServiceInfo serviceInfo : serviceInfoList) {
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceNo"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceNo()));
 
-						ExpandoRowLocalServiceUtil.addRow(
-								expandoTable.getTableId(),
-								serviceInfo.getServiceinfoId());
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceName"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceName()));
 
-						JSONObject serviceInfoColumnNames = WebKeys
-								.getServiceInfoColumnNames();
+				// ExpandoValueLocalServiceUtil.addValue(
+				// companyId, WebKeys.SERVICE_INFO,
+				// WebKeys.EXTableName_SERVICE_INFO,
+				// serviceInfoColumnNames.getString("shortName"),
+				// serviceInfo.getServiceinfoId(),
+				// String.valueOf(serviceInfo.getServiceName()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames.getString("serviceNo"),
-								serviceInfo.getServiceinfoId(),
-								String.valueOf(serviceInfo.getServiceNo()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceProcess"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceProcess()));
 
-						ExpandoValueLocalServiceUtil
-								.addValue(companyId, WebKeys.SERVICE_INFO,
-										WebKeys.EXTableName_SERVICE_INFO,
-										serviceInfoColumnNames
-												.getString("serviceName"),
-										serviceInfo.getServiceinfoId(), String
-												.valueOf(serviceInfo
-														.getServiceName()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceMethod"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceMethod()));
 
-						// ExpandoValueLocalServiceUtil.addValue(
-						// companyId, WebKeys.SERVICE_INFO,
-						// WebKeys.EXTableName_SERVICE_INFO,
-						// serviceInfoColumnNames.getString("shortName"),
-						// serviceInfo.getServiceinfoId(),
-						// String.valueOf(serviceInfo.getServiceName()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceDossier"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceDossier()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceProcess"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceProcess()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceCondition"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceCondition()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceMethod"),
-								serviceInfo.getServiceinfoId(),
-								String.valueOf(serviceInfo.getServiceMethod()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceDuration"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceDuration()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceDossier"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceDossier()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceActors"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceActors()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceCondition"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceCondition()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceResults"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceResults()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceDuration"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceDuration()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceRecords"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceRecords()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceActors"),
-								serviceInfo.getServiceinfoId(),
-								String.valueOf(serviceInfo.getServiceActors()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceIntructions"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getServiceInstructions()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceResults"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceResults()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("administrationCode"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getAdministrationCode()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceRecords"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceRecords()));
-
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceIntructions"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getServiceInstructions()));
-
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("administrationCode"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getAdministrationCode()));
-
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
+				ExpandoValueLocalServiceUtil
+						.addValue(companyId, WebKeys.SERVICE_INFO,
 								WebKeys.EXTableName_SERVICE_INFO,
 								serviceInfoColumnNames
 										.getString("administrationIndex"),
@@ -646,70 +602,53 @@ public class ServiceInfoUtils {
 										.valueOf(serviceInfo
 												.getAdministrationIndex()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames.getString("domainCode"),
-								serviceInfo.getServiceinfoId(),
-								String.valueOf(serviceInfo.getDomainCode()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("domainCode"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getDomainCode()));
 
-						ExpandoValueLocalServiceUtil
-								.addValue(companyId, WebKeys.SERVICE_INFO,
-										WebKeys.EXTableName_SERVICE_INFO,
-										serviceInfoColumnNames
-												.getString("activeSatus"),
-										serviceInfo.getServiceinfoId(), String
-												.valueOf(serviceInfo
-														.getActiveStatus()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("activeSatus"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getActiveStatus()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("hasTemplateFiles"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(serviceInfo
-												.getHasTemplateFiles()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("hasTemplateFiles"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getHasTemplateFiles()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames.getString("fullName"),
-								serviceInfo.getServiceinfoId(),
-								String.valueOf(serviceInfo.getFullName()));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("fullName"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(serviceInfo.getFullName()));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames
-										.getString("serviceInfoIdNew"),
-								serviceInfo.getServiceinfoId(), String
-										.valueOf(StringPool.BLANK));
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceInfoIdNew"),
+						serviceInfo.getServiceinfoId(),
+						String.valueOf(StringPool.BLANK));
 
-						ExpandoValueLocalServiceUtil.addValue(companyId,
-								WebKeys.SERVICE_INFO,
-								WebKeys.EXTableName_SERVICE_INFO,
-								serviceInfoColumnNames.getString("serviceFee"),
-								serviceInfo.getServiceinfoId(),
-								serviceInfo.getServiceFee());
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("serviceFee"),
+						serviceInfo.getServiceinfoId(),
+						serviceInfo.getServiceFee());
 
-						ExpandoValueLocalServiceUtil
-								.addValue(companyId, WebKeys.SERVICE_INFO,
-										WebKeys.EXTableName_SERVICE_INFO,
-										serviceInfoColumnNames
-												.getString("domainIndex"),
-										serviceInfo.getServiceinfoId(),
-										serviceInfo.getDomainIndex());
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO, WebKeys.EXTableName_SERVICE_INFO,
+						serviceInfoColumnNames.getString("domainIndex"),
+						serviceInfo.getServiceinfoId(),
+						serviceInfo.getDomainIndex());
 
-						_log.info("*i:" + i);
-						_log.info("=====serviceinfoId:"
-								+ serviceInfo.getServiceinfoId());
-						i++;
-					}
-				}
+				_log.info("=====serviceinfoId:"
+						+ serviceInfo.getServiceinfoId());
+
 			}
 
-			_log.info("=====fetdone...ServiceInfo");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

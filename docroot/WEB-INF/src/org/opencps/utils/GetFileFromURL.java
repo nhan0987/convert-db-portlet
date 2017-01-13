@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -207,6 +208,85 @@ public class GetFileFromURL {
 			}
 		}
 
+	}
+	
+	public static File requestFileFromURL(String fileUrl) throws IOException {
+
+		String fileURL = fileUrl;
+
+		_log.info("===fileURL" + fileURL);
+
+		HttpURLConnection connection = null;
+		File file = null;
+
+		if (Validator.isNotNull(fileURL)) {
+
+			try {
+				URL url = new URL(fileURL);
+
+				connection = (HttpURLConnection) url.openConnection();
+				connection.addRequestProperty("Accept-Language",
+						"en-US,en;q=0.8");
+				connection.addRequestProperty("User-Agent", "Mozilla");
+				connection.addRequestProperty("Referer", "google.com");
+
+				connection.setInstanceFollowRedirects(false);
+				connection.setConnectTimeout(5000); // 5s
+				connection.setReadTimeout(5000); // 5s
+
+				int status = connection.getResponseCode();
+
+				boolean redirect = false;
+
+				// normally, 3xx is redirect
+				if (status != HttpURLConnection.HTTP_OK) {
+					if (status == HttpURLConnection.HTTP_MOVED_TEMP
+							|| status == HttpURLConnection.HTTP_MOVED_PERM
+							|| status == HttpURLConnection.HTTP_SEE_OTHER)
+						redirect = true;
+				}
+
+				if (redirect) {
+
+					// get redirect url from "location" header field
+					String newUrl = connection.getHeaderField("Location");
+
+					// get the cookie if need, for login
+					String cookies = connection.getHeaderField("Set-Cookie");
+
+					// open the new connnection again
+					connection = (HttpURLConnection) new URL(newUrl)
+							.openConnection();
+
+					connection.setRequestProperty("Cookie", cookies);
+					connection.addRequestProperty("Accept-Language",
+							"en-US,en;q=0.8");
+					connection.addRequestProperty("User-Agent", "Mozilla");
+					connection.addRequestProperty("Referer", "google.com");
+
+					connection.setConnectTimeout(5000); // 5s
+					connection.setReadTimeout(5000); // 5s
+
+					status = connection.getResponseCode();
+				}
+
+				if (status == HttpURLConnection.HTTP_OK) {
+					InputStream is = connection.getInputStream();
+					
+					
+
+					file = FileUtil.createTempFile(is);
+
+					return file;
+
+				}
+			} catch (IOException ioe) {
+				throw new IOException(ioe.getMessage());
+			} finally {
+				connection.disconnect();
+			}
+		}
+		return null;
 	}
 
 	public byte[] fileBytes;

@@ -228,4 +228,73 @@ public class ProcessStepUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fetchProcessStep2(ThemeDisplay themeDisplay, ProcessStep object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_ProcessStep, WebKeys.PROCESS_STEP,
+						WebKeys.ProcessStepColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getProcessStepId());
+
+				JSONObject columnNames = WebKeys.getProcessStepColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("serviceProcessId"),
+						object.getProcessStepId(),
+						String.valueOf(object.getServiceProcessId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("stepName"),
+						object.getProcessStepId(),
+						String.valueOf(object.getStepName()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("sequenceNo"),
+						object.getProcessStepId(),
+						String.valueOf(object.getSequenceNo()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("dossierStatus"),
+						object.getProcessStepId(),
+						String.valueOf(object.getDossierStatus()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("dayDuration"),
+						object.getProcessStepId(),
+						String.valueOf(object.getDaysDuration()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("dossierSubStatus"),
+						object.getProcessStepId(),
+						String.valueOf(object.getDossierSubStatus()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.PROCESS_STEP, WebKeys.EXTableName_ProcessStep,
+						columnNames.getString("processStepIdNew"),
+						object.getProcessStepId(), StringPool.BLANK);
+
+				_log.info("=====ProcessStepId:" + object.getProcessStepId());
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

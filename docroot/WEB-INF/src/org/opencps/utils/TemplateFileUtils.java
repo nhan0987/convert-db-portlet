@@ -209,4 +209,63 @@ public class TemplateFileUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	public void fetchTemplateFile2(ThemeDisplay themeDisplay,
+			TemplateFile templateFile) {
+
+		try {
+
+			if (Validator.isNotNull(templateFile)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils
+						.checkTable(companyId,
+								WebKeys.EXTableName_TEMPLATE_FILE,
+								WebKeys.TEMPLATE_FILE,
+								WebKeys.TemplateFile_ColumnNames);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						templateFile.getTemplatefileId());
+
+				JSONObject serviceInfoColumnNames = WebKeys
+						.getTemplateFileColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.TEMPLATE_FILE,
+						WebKeys.EXTableName_TEMPLATE_FILE,
+						serviceInfoColumnNames.getString("fileName"),
+						templateFile.getTemplatefileId(),
+						templateFile.getFileName());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.TEMPLATE_FILE,
+						WebKeys.EXTableName_TEMPLATE_FILE,
+						serviceInfoColumnNames.getString("fileNo"),
+						templateFile.getTemplatefileId(),
+						templateFile.getFileNo());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.TEMPLATE_FILE,
+						WebKeys.EXTableName_TEMPLATE_FILE,
+						serviceInfoColumnNames.getString("fileEntryId"),
+						templateFile.getTemplatefileId(),
+						String.valueOf(templateFile.getFileEntryId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.TEMPLATE_FILE,
+						WebKeys.EXTableName_TEMPLATE_FILE,
+						serviceInfoColumnNames.getString("templateFileIdNew"),
+						templateFile.getTemplatefileId(), StringPool.BLANK);
+
+				_log.info("=====TemplatefileId:"
+						+ templateFile.getTemplatefileId());
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
