@@ -214,7 +214,7 @@ public class ProcessStepUtils {
 				processStep.setGroupId(serviceContext.getScopeGroupId());
 				processStep.setUserId(serviceContext.getUserId());
 
-				ProcessStepLocalServiceUtil.updateProcessStep(processStep);
+				ProcessStepLocalServiceUtil.addProcessStep(processStep);
 
 				ExpandoValueLocalServiceUtil.addValue(
 					themeDisplay.getCompanyId(), WebKeys.PROCESS_STEP,

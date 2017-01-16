@@ -464,7 +464,7 @@ public class ServiceInfoUtils {
 					serviceInfo.setUserId(serviceContext.getUserId());
 					serviceInfo.setGroupId(themeDisplay.getScopeGroupId());
 
-					ServiceInfoLocalServiceUtil.updateServiceInfo(serviceInfo);
+					ServiceInfoLocalServiceUtil.addServiceInfo(serviceInfo);
 
 					_log.info("=====addsuccess=====serviceInfoId:"
 							+ serviceInfo.getServiceinfoId());

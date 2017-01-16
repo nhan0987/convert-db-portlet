@@ -331,7 +331,7 @@ public class DossierLogUtils {
 							.setSyncStatus(Validator.isNotNull(syncStatus) ? Integer
 									.valueOf(syncStatus) : 0);
 
-					DossierLogLocalServiceUtil.updateDossierLog(dossierLog);
+					DossierLogLocalServiceUtil.addDossierLog(dossierLog);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DOSSIER_LOG,

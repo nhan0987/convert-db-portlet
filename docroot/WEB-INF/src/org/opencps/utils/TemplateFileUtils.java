@@ -182,7 +182,7 @@ public class TemplateFileUtils {
 					templateFile.setGroupId(themeDisplay.getScopeGroupId());
 					templateFile.setUserId(serviceContext.getUserId());
 
-					TemplateFileLocalServiceUtil.updateTemplateFile(templateFile);
+					TemplateFileLocalServiceUtil.addTemplateFile(templateFile);
 
 					ExpandoValueLocalServiceUtil.addValue(
 						themeDisplay.getCompanyId(), WebKeys.TEMPLATE_FILE,

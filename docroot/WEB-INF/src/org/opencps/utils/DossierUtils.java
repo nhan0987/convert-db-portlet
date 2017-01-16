@@ -665,7 +665,7 @@ public class DossierUtils {
 							.isNotNull(finishDateTime) ? DateTimeUtil
 							.convertStringToFullDate(finishDateTime) : null);
 
-					DossierLocalServiceUtil.updateDossier(dossier);
+					DossierLocalServiceUtil.addDossier(dossier);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DOSSIER,

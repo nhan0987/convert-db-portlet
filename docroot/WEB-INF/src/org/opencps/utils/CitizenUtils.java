@@ -317,7 +317,7 @@ public class CitizenUtils {
 						citizen.setMappingUserId(Long.valueOf(mappingUserIdNew));
 					}
 
-					CitizenLocalServiceUtil.updateCitizen(citizen);
+					CitizenLocalServiceUtil.addCitizen(citizen);
 
 					ExpandoValueLocalServiceUtil.addValue(
 						themeDisplay.getCompanyId(), WebKeys.CITIZEN, WebKeys.EXTableName_Citizen,

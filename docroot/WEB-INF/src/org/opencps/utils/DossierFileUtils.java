@@ -488,7 +488,7 @@ public class DossierFileUtils {
 					dossierFile.setCompanyId(themeDisplay.getCompanyId());
 					dossierFile.setGroupId(themeDisplay.getScopeGroupId());
 
-					DossierFileLocalServiceUtil.updateDossierFile(dossierFile);
+					DossierFileLocalServiceUtil.addDossierFile(dossierFile);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DOSSIER_FILE,

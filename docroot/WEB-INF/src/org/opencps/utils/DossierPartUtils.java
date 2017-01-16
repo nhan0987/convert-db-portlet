@@ -218,11 +218,11 @@ public class DossierPartUtils {
 						columnNames.getString("partName"), row.getClassPK(),
 						StringPool.BLANK);
 
-				String partTip = ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
-						WebKeys.EXTableName_DossierPart,
-						columnNames.getString("partTip"), row.getClassPK(),
-						StringPool.BLANK);
+//				String partTip = ExpandoValueLocalServiceUtil.getData(
+//						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
+//						WebKeys.EXTableName_DossierPart,
+//						columnNames.getString("partTip"), row.getClassPK(),
+//						StringPool.BLANK);
 
 				String partType = ExpandoValueLocalServiceUtil.getData(
 						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
@@ -314,7 +314,7 @@ public class DossierPartUtils {
 					dossierPart.setGroupId(themeDisplay.getScopeGroupId());
 					dossierPart.setCreateDate(new Date());
 
-					DossierPartLocalServiceUtil.updateDossierPart(dossierPart);
+					DossierPartLocalServiceUtil.addDossierPart(dossierPart);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,

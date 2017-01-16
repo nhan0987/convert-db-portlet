@@ -175,7 +175,7 @@ public class DossierTemplateUtils {
 					dossierTemplate.setUserId(themeDisplay.getUserId());
 
 					DossierTemplateLocalServiceUtil
-							.updateDossierTemplate(dossierTemplate);
+							.addDossierTemplate(dossierTemplate);
 
 					ExpandoValueLocalServiceUtil.addValue(themeDisplay
 							.getCompanyId(), WebKeys.DOSSIER_TEMPLATE,

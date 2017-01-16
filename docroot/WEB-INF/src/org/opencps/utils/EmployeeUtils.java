@@ -305,7 +305,7 @@ public class EmployeeUtils {
 					employee.setGroupId(serviceContext.getScopeGroupId());
 					employee.setUserId(serviceContext.getUserId());
 
-					EmployeeLocalServiceUtil.updateEmployee(employee);
+					EmployeeLocalServiceUtil.addEmployee(employee);
 
 					ExpandoValueLocalServiceUtil.addValue(
 						themeDisplay.getCompanyId(), WebKeys.EMPLOYEES,

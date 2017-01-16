@@ -381,7 +381,7 @@ public class DossierFileLogUtils {
 									.valueOf(count_) : 0);
 
 					DossierFileLogLocalServiceUtil
-							.updateDossierFileLog(dossierFileLog);
+							.addDossierFileLog(dossierFileLog);
 
 					ExpandoValueLocalServiceUtil.addValue(themeDisplay
 							.getCompanyId(), WebKeys.DOSSIER_FILE_LOG,

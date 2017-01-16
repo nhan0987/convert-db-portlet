@@ -311,6 +311,8 @@ public class ActionHistoryUtils {
 					actionHistory.setModifiedDate(Validator
 							.isNotNull(actionDateTime) ? DateTimeUtil
 							.convertStringToFullDate(actionDateTime) : null);
+					
+					ActionHistoryLocalServiceUtil.addActionHistory(actionHistory);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(),

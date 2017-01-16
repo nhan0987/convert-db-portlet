@@ -573,7 +573,7 @@ public class PaymentFileUtils {
 							.valueOf(paymentGateStatusCode) : 0);
 					paymentFile.setConfirmFileEntryId(confirmFileEntryIdNew);
 
-					PaymentFileLocalServiceUtil.updatePaymentFile(paymentFile);
+					PaymentFileLocalServiceUtil.addPaymentFile(paymentFile);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.PAYMENT_FILE,
