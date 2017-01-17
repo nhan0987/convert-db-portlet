@@ -168,11 +168,11 @@
 		<aui:button type="submit" name="name" value="addAllDossierContent" />
 	</aui:form>
 	
-	<aui:form action="<%=setUserGroupNewURL.toString()%>" method="post"
-		name="name">
-		<aui:input name="hidden" type="text" value="value" title="Input" />
-		<aui:button type="submit" name="name" value="setUserGroupNew" />
-	</aui:form>
+<%-- 	<aui:form action="<%=setUserGroupNewURL.toString()%>" method="post" --%>
+<%-- 		name="name"> --%>
+<%-- 		<aui:input name="hidden" type="text" value="value" title="Input" /> --%>
+<%-- 		<aui:button type="submit" name="name" value="setUserGroupNew" /> --%>
+<%-- 	</aui:form> --%>
 
 </aui:column>
 

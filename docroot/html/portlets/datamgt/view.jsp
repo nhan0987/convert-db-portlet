@@ -12,10 +12,13 @@
 %>
 
 <liferay-ui:tabs
-	names="GetConfig,AddConfig,TestConfig,TestDossier,RemoveConfig"
+	names="OneClick,GetConfig,AddConfig,TestConfig,TestDossier,RemoveConfig"
 	refresh="false" 
-	tabsValues="GetConfig,AddConfig,TestConfig,TestDossier,RemoveConfig"
+	tabsValues="OneClick,GetConfig,AddConfig,TestConfig,TestDossier,RemoveConfig"
 >
+	<liferay-ui:section>
+        <%@ include file="view_oneclick.jsp"%>
+    </liferay-ui:section>
 	<liferay-ui:section>
         <%@ include file="view_fetchconfig.jsp"%>
     </liferay-ui:section>
@@ -31,4 +34,5 @@
     <liferay-ui:section>
         <%@ include file="view_removeconfig.jsp"%>
     </liferay-ui:section>
+    
 </liferay-ui:tabs>

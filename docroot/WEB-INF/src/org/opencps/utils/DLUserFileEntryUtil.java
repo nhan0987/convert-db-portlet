@@ -1,6 +1,5 @@
 package org.opencps.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -14,7 +13,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -88,18 +86,18 @@ public class DLUserFileEntryUtil {
 			
 			long fileEntryId = 0;
 			
-			File file = null;
+			JSONObject jsonData = null;
 			
 			try {
-				file = GetFileFromURL.requestFileFromURL(fileUrl);
+				jsonData = GetFileFromURL.requestFileFromURL(fileUrl);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			if(Validator.isNotNull(file)){
+			if(Validator.isNotNull(jsonData)){
 				
-				fileEntryId =uploadFile(actionRequest, actionResponse, file);
+				fileEntryId =uploadFile(actionRequest, actionResponse, jsonData);
 				
 			}
 		}
@@ -108,14 +106,14 @@ public class DLUserFileEntryUtil {
 	}
 	
 	private long uploadFile(ActionRequest actionRequest,
-			ActionResponse actionResponse, File file) {
+			ActionResponse actionResponse, JSONObject jsonData) {
 
 		long entryFileId = 0;
 		FileEntry fileEntry = null;
 
 		try {
 
-			if (Validator.isNotNull(file)) {
+			if (Validator.isNotNull(jsonData)) {
 
 				ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 						.getAttribute(WebKeys.THEME_DISPLAY);
@@ -125,13 +123,19 @@ public class DLUserFileEntryUtil {
 
 				serviceContext.setAddGroupPermissions(true);
 				serviceContext.setAddGuestPermissions(true);
+				
+				byte[] fileBytes = null;
+				fileBytes = jsonData.getString("fileBytes").getBytes();
+				
+				
+				
 
 				long repositoryId = themeDisplay.getScopeGroupId();
 				long folderId = 0;
 				String sourceFileName = StringPool.BLANK;
 				String extension = StringPool.BLANK;
 
-				extension = "";
+				extension = jsonData.getString("fileExtension");
 
 				Calendar cal = Calendar.getInstance();
 
@@ -141,7 +145,8 @@ public class DLUserFileEntryUtil {
 				String title = sourceFileName + StringPool.PERIOD + extension;
 				String changeLog = StringPool.BLANK;
 
-				String mimeType = MimeTypesUtil.getContentType(file);
+				String mimeType = MimeTypesUtil.getContentType(jsonData.getString("fileName"));
+				
 				
 				
 
@@ -156,7 +161,7 @@ public class DLUserFileEntryUtil {
 
 					fileEntry = DLAppServiceUtil.addFileEntry(repositoryId,
 							folderId, sourceFileName, mimeType, title,
-							description, changeLog, file, serviceContext);
+							description, changeLog, fileBytes, serviceContext);
 				} catch (Exception e) {
 
 					if (e instanceof DuplicateFileException) {

@@ -2,7 +2,6 @@
 package org.opencps.utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -211,14 +210,14 @@ public class GetFileFromURL {
 
 	}
 	
-	public static File requestFileFromURL(String fileUrl) throws IOException {
+	public static JSONObject requestFileFromURL(String fileUrl) throws IOException {
 
 		String fileURL = fileUrl;
 
 		_log.info("===fileURL" + fileURL);
 
 		HttpURLConnection connection = null;
-		File file = null;
+		byte[] fileBytes = null;
 
 		if (Validator.isNotNull(fileURL)) {
 
@@ -274,11 +273,26 @@ public class GetFileFromURL {
 				if (status == HttpURLConnection.HTTP_OK) {
 					InputStream is = connection.getInputStream();
 					
+					String raw =connection.getHeaderField("Content-Disposition");
+					String fileName = StringPool.BLANK;
+					String fileExtension = StringPool.BLANK;
+
+					fileBytes = FileUtil.getBytes(is);
 					
-
-					file = FileUtil.createTempFile(is);
-
-					return file;
+					if(raw != null && raw.indexOf("=") != -1) {
+					    fileName = raw.split("=")[1]; 
+					}
+					fileName = URLDecoder.decode(fileName.trim(), "UTF-8");
+					fileExtension = FileUtil.getExtension(fileName);
+					
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+					jsonObject.put("fileExtension", fileExtension);
+					jsonObject.put("fileBytes", fileBytes.toString());
+					jsonObject.put("fileName", fileName);
+					
+					_log.info("=====jsonObject:"+jsonObject);
+					
+					return jsonObject;
 
 				}
 			} catch (IOException ioe) {
@@ -297,7 +311,7 @@ public class GetFileFromURL {
 		_log.info("===fileURL" + fileURL);
 
 		HttpURLConnection connection = null;
-		File file = null;
+		byte[] fileBytes = null;
 
 		if (Validator.isNotNull(fileURL)) {
 
@@ -355,18 +369,23 @@ public class GetFileFromURL {
 					InputStream is = connection.getInputStream();
 					
 					String raw =connection.getHeaderField("Content-Disposition");
-					
-					System.out.println("=====raw:"+raw);
-					
 					String fileName = StringPool.BLANK;
+					String fileExtension = StringPool.BLANK;
+
+					fileBytes = FileUtil.getBytes(is);
 					
 					if(raw != null && raw.indexOf("=") != -1) {
 					    fileName = raw.split("=")[1]; 
 					}
 					fileName = URLDecoder.decode(fileName.trim(), "UTF-8");
-					System.out.println("=====fileName:"+fileName);
-
-					//file = FileUtil.createTempFile(is);
+					fileExtension = FileUtil.getExtension(fileName);
+					
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+					jsonObject.put("fileExtension", fileExtension);
+					jsonObject.put("fileBytes", fileBytes.toString());
+					jsonObject.put("fileName", fileName);
+					
+					System.out.println("=====jsonObject:"+jsonObject);
 
 				}
 			} catch (IOException ioe) {
