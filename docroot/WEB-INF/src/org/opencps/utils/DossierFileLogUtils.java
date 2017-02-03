@@ -342,6 +342,8 @@ public class DossierFileLogUtils {
 				// ////////////////////////////////////////////////////////////////////////////
 
 				DossierFileLog dossierFileLog = null;
+				
+				_log.info("=====dossierIdNew:"+dossierIdNew);
 
 				if (dossierIdNew > 0) {
 
@@ -390,6 +392,9 @@ public class DossierFileLogUtils {
 									.getClassPK(), String
 									.valueOf(dossierFileLog
 											.getDossierFileLogId()));
+					
+					_log.info("=====add Success===dossierFileLog.getDossierFileLogId():"
+							+ dossierFileLog.getDossierFileLogId());
 				}
 
 			}

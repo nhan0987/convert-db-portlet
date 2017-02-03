@@ -307,7 +307,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			ActionResponse actionResponse) throws Exception {
 
 		OrganizationUtils utils = new OrganizationUtils();
-		utils.addOrganization(actionRequest, actionResponse);
+		//utils.addOrganization(actionRequest, actionResponse);
 
 	}
 
@@ -1854,7 +1854,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierLogUtils utils = new DossierLogUtils();
 		utils.fetchDossierLog(actionRequest, actionResponse);
-		;
 	}
 
 	public void addDossierLog(ActionRequest actionRequest,
@@ -1862,7 +1861,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierLogUtils utils = new DossierLogUtils();
 		utils.addDossierLog(actionRequest, actionResponse);
-		;
 	}
 
 	// /////////////////////////////////////////////////////
@@ -1872,7 +1870,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierFileLogUtils utils = new DossierFileLogUtils();
 		utils.fetchDossierFileLog(actionRequest, actionResponse);
-		;
 	}
 
 	public void addDossierFileLog(ActionRequest actionRequest,
@@ -1880,7 +1877,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierFileLogUtils utils = new DossierFileLogUtils();
 		utils.addDossierFileLog(actionRequest, actionResponse);
-		;
 	}
 
 	// /////////////////////////////////////////////////////

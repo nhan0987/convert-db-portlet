@@ -199,6 +199,9 @@ public class DossierLogUtils {
 			for (int i = 0; i < rows.size(); i++) {
 
 				row = rows.get(i);
+				
+				_log.info("*i:" + i);
+				_log.info("=====row.getClassPK()" + row.getClassPK());
 
 				JSONObject columnNames = WebKeys.getDOSSIER_LOGColumnNames();
 
@@ -298,6 +301,8 @@ public class DossierLogUtils {
 				// ////////////////////////////////////////////////////////////////////////////
 
 				DossierLog dossierLog = null;
+				
+				_log.info("=====dossierIdNew:"+dossierIdNew);
 
 				if (dossierIdNew > 0) {
 
@@ -339,6 +344,9 @@ public class DossierLogUtils {
 							columnNames.getString("dossierLogIdNew"),
 							row.getClassPK(),
 							String.valueOf(dossierLog.getDossierLogId()));
+					
+					_log.info("=====add Success===dossierLog.getDossierLogId():"
+							+ dossierLog.getDossierLogId());
 				}
 
 			}
@@ -403,7 +411,7 @@ public class DossierLogUtils {
 										.getString("modifiedDate"), object
 										.getDossierLogId(),
 								DateTimeUtil.convertDateToString(
-										object.getCreateDate(),
+										object.getModifiedDate(),
 										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
 						ExpandoValueLocalServiceUtil.addValue(companyId,
@@ -411,14 +419,14 @@ public class DossierLogUtils {
 								WebKeys.EXTableName_DOSSIER_LOG,
 								columnNames.getString("dossierId"),
 								object.getDossierLogId(),
-								String.valueOf(object.getUserId()));
+								String.valueOf(object.getDossierId()));
 
 						ExpandoValueLocalServiceUtil.addValue(companyId,
 								WebKeys.DOSSIER_LOG,
 								WebKeys.EXTableName_DOSSIER_LOG,
 								columnNames.getString("requestCommand"),
 								object.getDossierLogId(),
-								String.valueOf(object.getUserId()));
+								String.valueOf(object.getRequestCommand()));
 
 						ExpandoValueLocalServiceUtil.addValue(companyId,
 								WebKeys.DOSSIER_LOG,

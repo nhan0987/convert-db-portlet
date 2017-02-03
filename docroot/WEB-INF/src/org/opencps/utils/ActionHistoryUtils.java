@@ -282,6 +282,7 @@ public class ActionHistoryUtils {
 				// ///////////////////////////////////////////////
 
 				ActionHistory actionHistory = null;
+				_log.info("=====logId:"+logId);
 
 				if (logId > 0) {
 

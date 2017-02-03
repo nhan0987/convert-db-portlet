@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -110,176 +111,6 @@ public class OrganizationUtils {
 		}
 	}
 
-	public void addOrganization(ActionRequest actionRequest, ActionResponse actionResponse) {
-
-		try {
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
-
-			ExpandoTable expandoTable = null;
-
-			CommonUtils commonUtils = new CommonUtils();
-			commonUtils.changeClassId(WebKeys.EXTableName_Organization, WebKeys.ORGANIZATION);
-			try {
-				expandoTable =
-					ExpandoTableLocalServiceUtil.getTable(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization);
-			}
-			catch (NoSuchTableException nste) {
-				_log.error(WebKeys.TABLE_NONE_EXISTED);
-			}
-
-			List<ExpandoRow> rows = new ArrayList<ExpandoRow>();
-			ExpandoRow row = null;
-
-			rows =
-				ExpandoRowLocalServiceUtil.getRows(
-					themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-					WebKeys.EXTableName_Organization, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
-			_log.info("=====adding..Organization");
-
-			for (int i = 0; i < rows.size(); i++) {
-
-				Organization organization = null;
-				String treePath = StringPool.BLANK;
-
-				_log.info("*i:" + i);
-
-				row = rows.get(i);
-
-				JSONObject columnNames = WebKeys.getOrganizationColumnNames();
-
-				String userName =
-					ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization, columnNames.getString("userName"),
-						row.getClassPK(), StringPool.BLANK);
-
-				String type_ =
-					ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization, columnNames.getString("type_"),
-						row.getClassPK(), StringPool.BLANK);
-
-				String name =
-					ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization, columnNames.getString("name"),
-						row.getClassPK(), StringPool.BLANK);
-
-				String statusId =
-					ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization, columnNames.getString("statusId"),
-						row.getClassPK(), StringPool.BLANK);
-				try {
-					organization =
-						OrganizationLocalServiceUtil.getOrganization(
-							themeDisplay.getCompanyId(), name);
-				}
-				catch (NoSuchOrganizationException e) {
-
-				}
-
-				long organizationId = 0;
-
-				if (Validator.isNull(organization)) {
-
-					_log.info("=====Creating Organization=====");
-
-					organizationId = CounterLocalServiceUtil.increment(WebKeys.ORGANIZATION);
-
-					organization = OrganizationLocalServiceUtil.createOrganization(organizationId);
-
-					organization.setName(name);
-					organization.setUserName(userName);
-					organization.setName(name);
-					organization.setType(type_);
-					organization.setStatusId(Integer.valueOf(statusId));
-
-					organization.setCompanyId(themeDisplay.getCompanyId());
-					organization.setUserId(serviceContext.getUserId());
-
-					OrganizationLocalServiceUtil.updateOrganization(organization);
-
-					ExpandoValueLocalServiceUtil.addValue(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization,
-						columnNames.getString("organizationIdNew"), row.getClassPK(),
-						String.valueOf(organizationId));
-
-					String parentOrganizationIdNew = StringPool.BLANK;
-
-					String parentOrganizationId =
-						ExpandoValueLocalServiceUtil.getData(
-							themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-							WebKeys.EXTableName_Organization,
-							columnNames.getString("parentOrganizationId"), row.getClassPK(),
-							StringPool.BLANK);
-
-					if (Validator.isNotNull(parentOrganizationId)) {
-
-						parentOrganizationIdNew =
-							ExpandoValueLocalServiceUtil.getData(
-								themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-								WebKeys.EXTableName_Organization,
-								columnNames.getString("organizationIdNew"),
-								Long.valueOf(parentOrganizationId), StringPool.BLANK);
-
-						organization.setParentOrganizationId(Validator.isNotNull(parentOrganizationIdNew)
-							? Long.valueOf(parentOrganizationIdNew) : 0);
-
-					}
-
-					treePath =
-						ExpandoValueLocalServiceUtil.getData(
-							themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-							WebKeys.EXTableName_Organization, columnNames.getString("treePath"),
-							row.getClassPK(), StringPool.BLANK);
-
-					treePath =
-						commonUtils.generateTreePath(
-							treePath, StringPool.SLASH, WebKeys.EXTableName_Organization,
-							columnNames.getString("organizationIdNew"), WebKeys.ORGANIZATION,
-							themeDisplay.getCompanyId());
-
-					organization.setTreePath(treePath);
-					OrganizationLocalServiceUtil.updateOrganization(organization);
-
-					_log.info("===addSuccess organizationId:" + organizationId);
-				}
-				else {
-					ExpandoValueLocalServiceUtil.addValue(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization,
-						columnNames.getString("organizationIdNew"), row.getClassPK(),
-						String.valueOf(organization.getOrganizationId()));
-
-					ExpandoValueLocalServiceUtil.addValue(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization,
-						columnNames.getString("parentOrganizationId"), row.getClassPK(),
-						String.valueOf(organization.getParentOrganizationId()));
-
-					ExpandoValueLocalServiceUtil.addValue(
-						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
-						WebKeys.EXTableName_Organization, columnNames.getString("treePath"),
-						row.getClassPK(), String.valueOf(organization.getTreePath()));
-
-				}
-
-			}
-			_log.info("=====done..Organization");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void addOrganization1(ActionRequest actionRequest, ActionResponse actionResponse) {
 
@@ -319,8 +150,10 @@ public class OrganizationUtils {
 				String treePath = StringPool.BLANK;
 
 				_log.info("*i:" + i);
-
 				row = rows.get(i);
+				_log.info("=====row.getClassPK()"+row.getClassPK());
+
+				
 
 				JSONObject columnNames = WebKeys.getOrganizationColumnNames();
 
@@ -347,6 +180,7 @@ public class OrganizationUtils {
 						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
 						WebKeys.EXTableName_Organization, columnNames.getString("statusId"),
 						row.getClassPK(), StringPool.BLANK);
+				_log.info("=====name:"+name);
 				try {
 					organization =
 						OrganizationLocalServiceUtil.getOrganization(
@@ -360,7 +194,7 @@ public class OrganizationUtils {
 
 				if (Validator.isNull(organization)) {
 
-					_log.info("=====Creating Organization=====");
+					
 
 					organizationId = CounterLocalServiceUtil.increment(WebKeys.ORGANIZATION);
 
@@ -372,11 +206,17 @@ public class OrganizationUtils {
 					organization.setType(type_);
 					organization.setStatusId(Integer.valueOf(statusId));
 					organization.setTreePath(String.valueOf(row.getClassPK()));
-
+					
+					organization.setCreateDate(new Date());
+					organization.setModifiedDate(new Date());
 					organization.setCompanyId(themeDisplay.getCompanyId());
 					organization.setUserId(serviceContext.getUserId());
 
+					//OrganizationLocalServiceUtil.addOrganization(organization);
 					OrganizationLocalServiceUtil.updateOrganization(organization);
+					
+					_log.info("====create Organization successs====="+organization.getOrganizationId());
+					_log.info("====organization.getName()====="+organization.getName());
 
 					ExpandoValueLocalServiceUtil.addValue(
 						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
@@ -402,6 +242,8 @@ public class OrganizationUtils {
 						themeDisplay.getCompanyId(), WebKeys.ORGANIZATION,
 						WebKeys.EXTableName_Organization, columnNames.getString("treePath"),
 						row.getClassPK(), String.valueOf(organization.getTreePath()));
+					
+					_log.info("=====organization existed:"+organization.getOrganizationId());
 
 				}
 

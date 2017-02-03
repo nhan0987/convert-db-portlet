@@ -574,7 +574,7 @@ public class DossierFileUtils {
 										.getString("modifiedDate"), object
 										.getDossierFileId(),
 								DateTimeUtil.convertDateToString(
-										object.getCreateDate(),
+										object.getModifiedDate(),
 										DateTimeUtil._VN_DATE_TIME_FORMAT));
 
 						ExpandoValueLocalServiceUtil.addValue(companyId,

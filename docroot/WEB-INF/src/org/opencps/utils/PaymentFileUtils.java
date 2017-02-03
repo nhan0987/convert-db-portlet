@@ -312,6 +312,8 @@ public class PaymentFileUtils {
 								paymentConfigConfigColumnNames
 										.getString("paymentConfigIdNew"),
 								themeDisplay);
+				
+				_log.info("=====dossierIdNew:"+dossierIdNew);
 
 				if (dossierIdNew > 0) {
 
