@@ -738,7 +738,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			addWorkJob(actionRequest, actionResponse);
 
 			addEmployeeJob(actionRequest, actionResponse);
-
+			setUserGroupNew(actionRequest, actionResponse);
 			addPaymentConfig(actionRequest, actionResponse);
 
 		} else {
