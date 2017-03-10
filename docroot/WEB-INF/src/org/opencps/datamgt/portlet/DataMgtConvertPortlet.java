@@ -669,6 +669,16 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		fetchPaymentConfig(actionRequest, actionResponse);
 
 	}
+	
+	
+	public void fetchAll1(ActionRequest actionRequest,
+			ActionResponse actionResponse) throws Exception {
+
+		fetchAll(actionRequest, actionResponse);
+		fetchAllDossierContent(actionRequest, actionResponse);
+
+	}
+	
 
 	public void addAll(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
@@ -1635,7 +1645,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 						try {
 							processOrder = ProcessOrderLocalServiceUtil
 									.findBy_Dossier(dossier.getDossierId());
-						} catch (NoSuchProcessOrderException e) {
+						} catch (Exception e) {
 
 						}
 
@@ -2006,7 +2016,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 			serviceProcess = ServiceProcessLocalServiceUtil.getServiceProcess(
 					themeDisplay.getScopeGroupId(), "dddfghjgh");
-		} catch (NoSuchServiceProcessException e) {
+		} catch (Exception e) {
 
 		}
 
@@ -2022,6 +2032,13 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		
 		
 		
+	}
+	
+	public void updateDossierInfo(ActionRequest actionRequest,
+			ActionResponse actionResponse){
+		
+		CommonUtils commonUtils = new CommonUtils();
+		commonUtils.updateDossierInfo(actionRequest, actionResponse);
 	}
 
 	private static Log _log = LogFactoryUtil

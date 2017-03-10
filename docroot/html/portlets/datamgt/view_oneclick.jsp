@@ -7,7 +7,7 @@
 
 
 
-<portlet:actionURL var="fetchAllUrl" name="fetchAll">
+<portlet:actionURL var="fetchAllUrl" name="fetchAll1">
 </portlet:actionURL>
 <portlet:actionURL var="fetchAllDossierContentURL" name="fetchAllDossierContent">
 </portlet:actionURL>
@@ -30,11 +30,11 @@
 			<aui:button type="submit" name="name" value="fetchChain" />
 		</aui:form>
 		
-		<aui:form action="<%=fetchAllDossierContentURL.toString()%>" method="post"
-			name="name">
-			<aui:input name="hidden" type="text" value="value" title="Input" />
-			<aui:button type="submit" name="name" value="fetchAllDossierContent" />
-		</aui:form>
+<%-- 		<aui:form action="<%=fetchAllDossierContentURL.toString()%>" method="post" --%>
+<%-- 			name="name"> --%>
+<%-- 			<aui:input name="hidden" type="text" value="value" title="Input" /> --%>
+<%-- 			<aui:button type="submit" name="name" value="fetchAllDossierContent" /> --%>
+<%-- 		</aui:form> --%>
 		
 	</aui:column>
 </aui:row>

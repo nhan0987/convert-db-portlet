@@ -53,6 +53,8 @@
 
 <portlet:actionURL var="setUserGroupNewURL" name="setUserGroupNew">
 </portlet:actionURL>
+<portlet:actionURL var="updateDossierInfoURL" name="updateDossierInfo">
+</portlet:actionURL>
 
 
 
@@ -168,11 +170,17 @@
 		<aui:button type="submit" name="name" value="addAllDossierContent" />
 	</aui:form>
 	
-<%-- 	<aui:form action="<%=setUserGroupNewURL.toString()%>" method="post" --%>
-<%-- 		name="name"> --%>
-<%-- 		<aui:input name="hidden" type="text" value="value" title="Input" /> --%>
-<%-- 		<aui:button type="submit" name="name" value="setUserGroupNew" /> --%>
-<%-- 	</aui:form> --%>
+	<aui:form action="<%=setUserGroupNewURL.toString()%>" method="post"
+ 		name="name"> 
+ 		<aui:input name="hidden" type="text" value="value" title="Input" /> 
+ 		<aui:button type="submit" name="name" value="setUserGroupNew" />
+	</aui:form> 
+	
+	<aui:form action="<%=updateDossierInfoURL.toString()%>" method="post"
+ 		name="name"> 
+ 		<aui:input name="govAgencyCode" type="text" value="" title="Input" /> 
+ 		<aui:button type="submit" name="name" value="updateDossierInfo" />
+	</aui:form>
 
 </aui:column>
 

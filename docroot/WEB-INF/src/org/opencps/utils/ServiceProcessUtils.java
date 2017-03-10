@@ -160,7 +160,7 @@ public class ServiceProcessUtils {
 					serviceProcess = ServiceProcessLocalServiceUtil
 							.getServiceProcess(themeDisplay.getScopeGroupId(),
 									processNo);
-				} catch (NoSuchServiceProcessException e) {
+				} catch (Exception e) {
 
 				}
 
