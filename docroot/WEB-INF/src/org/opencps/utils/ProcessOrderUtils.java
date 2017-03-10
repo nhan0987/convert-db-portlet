@@ -146,7 +146,7 @@ public class ProcessOrderUtils {
 						object.getProcessOrderId(), StringPool.BLANK);
 
 				_log.info("=====ProcessOrderId:" + object.getProcessOrderId());
-				
+
 				i++;
 
 			}
@@ -193,9 +193,9 @@ public class ProcessOrderUtils {
 			for (int i = 0; i < rows.size(); i++) {
 
 				row = rows.get(i);
-				
-				_log.info("*i:"+i);
-				_log.info("=====row.getClassPK():"+row.getClassPK());
+
+				_log.info("*i:" + i);
+				_log.info("=====row.getClassPK():" + row.getClassPK());
 
 				JSONObject columnNames = WebKeys.getPROCESS_ORDERColumnNames();
 
@@ -313,42 +313,185 @@ public class ProcessOrderUtils {
 				ProcessOrder processOrder = null;
 
 				long fileGroupId = 0;
-				
-				if(dossierIdNew >0){
 
-				processOrder = ProcessOrderLocalServiceUtil
-						.addProcessOrder(
-								dossierIdNew,
-								fileGroupId,
-								serviceProcessIdNew,
-								processStepIdNew,
-								processWorkflowIdNew,
-								actionUserIdNew,
-								Validator.isNotNull(actionDateTime) ? DateTimeUtil
-										.convertStringToFullDate(actionDateTime)
-										: null, StringPool.BLANK,
-								StringPool.BLANK, actionNote,
-								assignToUserIdNew, dossierStatus, 0, 0,
-								serviceContext);
+				if (dossierIdNew > 0) {
 
-				processOrder
-						.setCreateDate(Validator.isNotNull(createDate) ? DateTimeUtil
-								.convertStringToFullDate(createDate) : null);
-				processOrder
-						.setModifiedDate(Validator.isNotNull(modifiedDate) ? DateTimeUtil
-								.convertStringToFullDate(modifiedDate) : null);
+					processOrder = ProcessOrderLocalServiceUtil
+							.addProcessOrder(
+									dossierIdNew,
+									fileGroupId,
+									serviceProcessIdNew,
+									processStepIdNew,
+									processWorkflowIdNew,
+									actionUserIdNew,
+									Validator.isNotNull(actionDateTime) ? DateTimeUtil
+											.convertStringToFullDate(actionDateTime)
+											: null, StringPool.BLANK,
+									StringPool.BLANK, actionNote,
+									assignToUserIdNew, dossierStatus, 0, 0,
+									serviceContext);
 
-				ProcessOrderLocalServiceUtil.updateProcessOrder(processOrder);
+					processOrder
+							.setCreateDate(Validator.isNotNull(createDate) ? DateTimeUtil
+									.convertStringToFullDate(createDate) : null);
+					processOrder.setModifiedDate(Validator
+							.isNotNull(modifiedDate) ? DateTimeUtil
+							.convertStringToFullDate(modifiedDate) : null);
 
-				ExpandoValueLocalServiceUtil.addValue(
-						themeDisplay.getCompanyId(), WebKeys.PROCESS_ORDER,
-						WebKeys.EXTableName_PROCESS_ORDER,
-						columnNames.getString("processOrderIdNew"),
-						row.getClassPK(),
-						String.valueOf(processOrder.getProcessOrderId()));
-				
-				_log.info("=====processOrder.getProcessOrderId():"+processOrder.getProcessOrderId());
+					ProcessOrderLocalServiceUtil
+							.updateProcessOrder(processOrder);
+
+					ExpandoValueLocalServiceUtil.addValue(
+							themeDisplay.getCompanyId(), WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("processOrderIdNew"),
+							row.getClassPK(),
+							String.valueOf(processOrder.getProcessOrderId()));
+
+					_log.info("=====processOrder.getProcessOrderId():"
+							+ processOrder.getProcessOrderId());
 				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void fetchProcessOrders2(ActionRequest actionRequest,
+			ActionResponse actionResponse) {
+
+		try {
+
+			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+					.getAttribute(WebKeys.THEME_DISPLAY);
+
+			long companyId = themeDisplay.getCompanyId();
+
+			List<ProcessOrder> List = ProcessOrderLocalServiceUtil
+					.getProcessOrders(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+			CommonUtils commonUtils = new CommonUtils();
+
+			ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+					WebKeys.EXTableName_PROCESS_ORDER, WebKeys.PROCESS_ORDER,
+					WebKeys.PROCESS_ORDERColumns);
+
+			int i = 1;
+			for (ProcessOrder object : List) {
+
+				_log.info("*i:" + i);
+
+				DossierUtils dossierUtils = new DossierUtils();
+
+				if (dossierUtils.fetchDossiers2(themeDisplay,
+						object.getDossierId())) {
+
+					ExpandoRowLocalServiceUtil.addRow(
+							expandoTable.getTableId(),
+							object.getProcessOrderId());
+
+					JSONObject columnNames = WebKeys
+							.getPROCESS_ORDERColumnNames();
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("dossierId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getDossierId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER, columnNames
+									.getString("createDate"), object
+									.getProcessOrderId(), DateTimeUtil
+									.convertDateToString(
+											object.getCreateDate(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER, columnNames
+									.getString("modifiedDate"), object
+									.getProcessOrderId(), DateTimeUtil
+									.convertDateToString(
+											object.getModifiedDate(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER, columnNames
+									.getString("actionDateTime"), object
+									.getProcessOrderId(), DateTimeUtil
+									.convertDateToString(
+											object.getActionDatetime(),
+											DateTimeUtil._VN_DATE_TIME_FORMAT));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("serviceProcessId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getServiceProcessId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("processStepId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getProcessStepId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("actionUserId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getActionUserId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("actionNote"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getActionNote()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("assignToUserId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getAssignToUserId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("processWorkflowId"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getProcessWorkflowId()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("dossierStatus"),
+							object.getProcessOrderId(),
+							String.valueOf(object.getDossierStatus()));
+
+					ExpandoValueLocalServiceUtil.addValue(companyId,
+							WebKeys.PROCESS_ORDER,
+							WebKeys.EXTableName_PROCESS_ORDER,
+							columnNames.getString("processOrderIdNew"),
+							object.getProcessOrderId(), StringPool.BLANK);
+
+					_log.info("=====processOrderId:"
+							+ object.getProcessOrderId());
+
+					ActionHistoryUtils actionHistoryUtils = new ActionHistoryUtils();
+					actionHistoryUtils.fetchActionhistory2(themeDisplay,
+							object.getProcessOrderId());
+
+				}
+				i++;
 
 			}
 		} catch (Exception e) {

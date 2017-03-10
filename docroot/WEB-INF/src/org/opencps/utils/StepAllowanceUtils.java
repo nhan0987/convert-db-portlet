@@ -194,7 +194,7 @@ public class StepAllowanceUtils {
 					stepAllowance.setReadOnly(Validator.isNotNull(readOnly)
 						? Boolean.valueOf(readOnly) : true);
 
-					StepAllowanceLocalServiceUtil.updateStepAllowance(stepAllowance);
+					StepAllowanceLocalServiceUtil.addStepAllowance(stepAllowance);
 
 					_log.info("=====add Success===stepAllowanceId:" + stepAllowanceId);
 				}
@@ -206,6 +206,61 @@ public class StepAllowanceUtils {
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fetchStepAllowance2(ThemeDisplay themeDisplay,
+			StepAllowance object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_StepAllowance,
+						WebKeys.STEPALOWANCE, WebKeys.StepAllowanceColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getStepAllowanceId());
+
+				JSONObject columnNames = WebKeys.getStepAllowanceColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.STEPALOWANCE,
+						WebKeys.EXTableName_StepAllowance,
+						columnNames.getString("processStepId"),
+						object.getStepAllowanceId(),
+						String.valueOf(object.getProcessStepId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.STEPALOWANCE,
+						WebKeys.EXTableName_StepAllowance,
+						columnNames.getString("roleId"),
+						object.getStepAllowanceId(),
+						String.valueOf(object.getRoleId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.STEPALOWANCE,
+						WebKeys.EXTableName_StepAllowance,
+						columnNames.getString("readOnly"),
+						object.getStepAllowanceId(),
+						String.valueOf(object.getReadOnly()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.STEPALOWANCE,
+						WebKeys.EXTableName_StepAllowance,
+						columnNames.getString("stepAllowanceIdNew"),
+						object.getStepAllowanceId(), StringPool.BLANK);
+
+				_log.info("=====StepAllowanceId:" + object.getStepAllowanceId());
+
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

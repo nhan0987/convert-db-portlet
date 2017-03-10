@@ -7,8 +7,6 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import org.opencps.datamgt.model.DictItem;
-import org.opencps.datamgt.service.DictItemLocalServiceUtil;
 import org.opencps.dossiermgt.NoSuchDossierPartException;
 import org.opencps.dossiermgt.model.DossierPart;
 import org.opencps.dossiermgt.service.DossierPartLocalServiceUtil;
@@ -220,11 +218,11 @@ public class DossierPartUtils {
 						columnNames.getString("partName"), row.getClassPK(),
 						StringPool.BLANK);
 
-				String partTip = ExpandoValueLocalServiceUtil.getData(
-						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
-						WebKeys.EXTableName_DossierPart,
-						columnNames.getString("partTip"), row.getClassPK(),
-						StringPool.BLANK);
+//				String partTip = ExpandoValueLocalServiceUtil.getData(
+//						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
+//						WebKeys.EXTableName_DossierPart,
+//						columnNames.getString("partTip"), row.getClassPK(),
+//						StringPool.BLANK);
 
 				String partType = ExpandoValueLocalServiceUtil.getData(
 						themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
@@ -316,7 +314,7 @@ public class DossierPartUtils {
 					dossierPart.setGroupId(themeDisplay.getScopeGroupId());
 					dossierPart.setCreateDate(new Date());
 
-					DossierPartLocalServiceUtil.updateDossierPart(dossierPart);
+					DossierPartLocalServiceUtil.addDossierPart(dossierPart);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DOSSIER_PART,
@@ -436,6 +434,108 @@ public class DossierPartUtils {
 				i++;
 			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fetchDossierPart2(ThemeDisplay themeDisplay, DossierPart object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_DossierPart, WebKeys.DOSSIER_PART,
+						WebKeys.DossierPartColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getDossierpartId());
+
+				JSONObject ColumnNames = WebKeys.getDossierPartColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("dossierTemplateId"),
+						object.getDossierpartId(),
+						String.valueOf(object.getDossierTemplateId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("partNo"),
+						object.getDossierpartId(), object.getPartNo());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("partName"),
+						object.getDossierpartId(), object.getPartName());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("partTip"),
+						object.getDossierpartId(), object.getPartTip());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("partType"),
+						object.getDossierpartId(),
+						String.valueOf(object.getPartType()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("parentId"),
+						object.getDossierpartId(),
+						String.valueOf(object.getParentId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("sibling"),
+						object.getDossierpartId(),
+						String.valueOf(object.getSibling()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("treeIndex"),
+						object.getDossierpartId(), object.getTreeIndex());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("formScript"),
+						object.getDossierpartId(), object.getFormScript());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("formReport"),
+						object.getDossierpartId(), object.getFormReport());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("spamleData"),
+						object.getDossierpartId(), object.getSampleData());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("required"),
+						object.getDossierpartId(),
+						String.valueOf(object.getRequired()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("templateFileNo"),
+						object.getDossierpartId(), object.getTemplateFileNo());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_PART, WebKeys.EXTableName_DossierPart,
+						ColumnNames.getString("dossierPartIdNew"),
+						object.getDossierpartId(), StringPool.BLANK);
+
+				_log.info("=====DossierpartId:" + object.getDossierpartId());
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

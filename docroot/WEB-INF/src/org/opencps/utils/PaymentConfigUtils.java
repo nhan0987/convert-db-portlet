@@ -436,7 +436,7 @@ public class PaymentConfigUtils {
 										.getUserId());
 
 								PaymentConfigLocalServiceUtil
-										.updatePaymentConfig(paymentConfig);
+										.addPaymentConfig(paymentConfig);
 
 								ExpandoValueLocalServiceUtil
 										.addValue(

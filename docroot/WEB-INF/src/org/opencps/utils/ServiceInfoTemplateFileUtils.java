@@ -9,7 +9,6 @@ import javax.portlet.ActionResponse;
 
 import org.opencps.servicemgt.model.ServiceFileTemplate;
 import org.opencps.servicemgt.service.ServiceFileTemplateLocalServiceUtil;
-import org.opencps.servicemgt.service.persistence.ServiceFileTemplatePK;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -17,6 +16,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.expando.NoSuchTableException;
 import com.liferay.portlet.expando.model.ExpandoRow;
@@ -172,5 +172,56 @@ public class ServiceInfoTemplateFileUtils {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void fetchServiceTemplateFile2(ThemeDisplay themeDisplay,
+			ServiceFileTemplate serviceFileTemplate) throws Exception {
+
+		try {
+
+			if (Validator.isNotNull(serviceFileTemplate)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.expandoTableName_ServiceInfo_TemplateFile,
+						WebKeys.SERVICE_INFO_TEMPLATE_FILE,
+						WebKeys.ServiceInfo_TemplateFile_ColumnNames);
+
+				long serviceFileTemplateId = CounterLocalServiceUtil
+						.increment(WebKeys.SERVICE_INFO_TEMPLATE_FILE);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						serviceFileTemplateId);
+
+				JSONObject columnNames = WebKeys
+						.getServiceInfoTemplateFileColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_INFO_TEMPLATE_FILE,
+						WebKeys.expandoTableName_ServiceInfo_TemplateFile,
+						columnNames.getString("serviceInfoId"),
+						serviceFileTemplateId,
+						String.valueOf(serviceFileTemplate.getServiceinfoId()));
+
+				ExpandoValueLocalServiceUtil
+						.addValue(
+								companyId,
+								WebKeys.SERVICE_INFO_TEMPLATE_FILE,
+								WebKeys.expandoTableName_ServiceInfo_TemplateFile,
+								columnNames.getString("templateFileId"),
+								serviceFileTemplateId, String
+										.valueOf(serviceFileTemplate
+												.getTemplatefileId()));
+
+			}
+		}
+
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

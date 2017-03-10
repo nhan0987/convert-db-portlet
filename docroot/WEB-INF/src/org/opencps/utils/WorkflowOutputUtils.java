@@ -232,7 +232,7 @@ public class WorkflowOutputUtils {
 					? Boolean.valueOf(postback) : false);
 				workflowOutput.setPattern(pattern);
 
-				WorkflowOutputLocalServiceUtil.updateWorkflowOutput(workflowOutput);
+				WorkflowOutputLocalServiceUtil.addWorkflowOutput(workflowOutput);
 
 				ExpandoValueLocalServiceUtil.addValue(
 					themeDisplay.getCompanyId(), WebKeys.WORKFLOW_OUTPUT,
@@ -245,6 +245,83 @@ public class WorkflowOutputUtils {
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fetchWorkflowOutput2(ThemeDisplay themeDisplay,
+			WorkflowOutput object) throws Exception {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_WorkflowOutput,
+						WebKeys.WORKFLOW_OUTPUT, WebKeys.WorkflowOutputColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getWorkflowOutputId());
+
+				JSONObject columnNames = WebKeys.getWorkflowOutputColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("processWorkflowId"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getProcessWorkflowId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("dossierPartId"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getDossierPartId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("required"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getRequired()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("esign"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getEsign()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("postback"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getPostback()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("pattern"),
+						object.getWorkflowOutputId(),
+						String.valueOf(object.getPattern()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.WORKFLOW_OUTPUT,
+						WebKeys.EXTableName_WorkflowOutput,
+						columnNames.getString("workflowOutputIdNew"),
+						object.getWorkflowOutputId(), StringPool.BLANK);
+
+				_log.info("=====WorkflowOutputId:"
+						+ object.getWorkflowOutputId());
+
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

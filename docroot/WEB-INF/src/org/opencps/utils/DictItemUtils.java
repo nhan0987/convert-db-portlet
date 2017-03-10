@@ -276,7 +276,7 @@ public class DictItemUtils {
 					dictItem.setUserId(serviceContext.getUserId());
 					dictItem.setGroupId(serviceContext.getScopeGroupId());
 
-					DictItemLocalServiceUtil.updateDictItem(dictItem);
+					DictItemLocalServiceUtil.addDictItem(dictItem);
 
 					ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.DICTITEM,

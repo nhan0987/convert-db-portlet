@@ -17,22 +17,37 @@ import org.opencps.datamgt.model.DictCollection;
 import org.opencps.datamgt.model.DictItem;
 import org.opencps.datamgt.service.DictCollectionLocalServiceUtil;
 import org.opencps.datamgt.service.DictItemLocalServiceUtil;
+import org.opencps.dossiermgt.NoSuchDossierTemplateException;
+import org.opencps.dossiermgt.model.Dossier;
+import org.opencps.dossiermgt.model.DossierFile;
+import org.opencps.dossiermgt.model.DossierFileLog;
+import org.opencps.dossiermgt.model.DossierLog;
 import org.opencps.dossiermgt.model.DossierPart;
 import org.opencps.dossiermgt.model.DossierTemplate;
 import org.opencps.dossiermgt.model.ServiceConfig;
+import org.opencps.dossiermgt.service.DossierFileLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierFileLogLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierLogLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierPartLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierTemplateLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.expando.model.DomainConfigExt;
 import org.opencps.expando.service.ExpandoExtLocalServiceUtil;
+import org.opencps.paymentmgt.model.PaymentFile;
+import org.opencps.paymentmgt.service.PaymentFileLocalServiceUtil;
+import org.opencps.processmgt.NoSuchProcessOrderException;
 import org.opencps.processmgt.NoSuchServiceProcessException;
+import org.opencps.processmgt.model.ActionHistory;
+import org.opencps.processmgt.model.ProcessOrder;
 import org.opencps.processmgt.model.ProcessStep;
 import org.opencps.processmgt.model.ProcessStepDossierPart;
 import org.opencps.processmgt.model.ProcessWorkflow;
-import org.opencps.processmgt.model.ServiceInfoProcess;
 import org.opencps.processmgt.model.ServiceProcess;
 import org.opencps.processmgt.model.StepAllowance;
 import org.opencps.processmgt.model.WorkflowOutput;
+import org.opencps.processmgt.service.ActionHistoryLocalServiceUtil;
+import org.opencps.processmgt.service.ProcessOrderLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessStepDossierPartLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessStepLocalServiceUtil;
 import org.opencps.processmgt.service.ProcessWorkflowLocalServiceUtil;
@@ -40,7 +55,7 @@ import org.opencps.processmgt.service.ServiceInfoProcessLocalServiceUtil;
 import org.opencps.processmgt.service.ServiceProcessLocalServiceUtil;
 import org.opencps.processmgt.service.StepAllowanceLocalServiceUtil;
 import org.opencps.processmgt.service.WorkflowOutputLocalServiceUtil;
-import org.opencps.processmgt.service.persistence.ServiceInfoProcessPK;
+import org.opencps.servicemgt.NoSuchTemplateFileException;
 import org.opencps.servicemgt.model.ServiceFileTemplate;
 import org.opencps.servicemgt.model.ServiceInfo;
 import org.opencps.servicemgt.model.TemplateFile;
@@ -96,11 +111,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -295,7 +307,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			ActionResponse actionResponse) throws Exception {
 
 		OrganizationUtils utils = new OrganizationUtils();
-		utils.addOrganization(actionRequest, actionResponse);
+		//utils.addOrganization(actionRequest, actionResponse);
 
 	}
 
@@ -657,6 +669,16 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		fetchPaymentConfig(actionRequest, actionResponse);
 
 	}
+	
+	
+	public void fetchAll1(ActionRequest actionRequest,
+			ActionResponse actionResponse) throws Exception {
+
+		fetchAll(actionRequest, actionResponse);
+		fetchAllDossierContent(actionRequest, actionResponse);
+
+	}
+	
 
 	public void addAll(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
@@ -1130,15 +1152,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 												}
 
-												// ServiceInfoProcessPK
-												// serviceInfoProcessPK =
-												// ServiceInfoProcessLocalServiceUtil.getServiceInfoProcess(serviceInfoProcessPK)
-												// new ServiceInfoProcessPK(
-												// serviceConfig
-												// .getServiceProcessId(),
-												// serviceConfig
-												// .getServiceInfoId());
-
 												ServiceInfoProcessLocalServiceUtil
 														.deleteServiceInfoProcess(
 																serviceConfig
@@ -1150,11 +1163,111 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 														.deleteServiceProcess(serviceProcess);
 
 											}
-
+											///////////////////////////////////////////////////////////////////////////
+											
+//											Organization organization = null;
+//
+//											try {
+//												organization = OrganizationLocalServiceUtil
+//														.getOrganization(serviceConfig
+//																.getGovAgencyOrganizationId());
+//											} catch (NoSuchOrganizationException e) {
+//
+//											}
+//
+//											if (Validator
+//													.isNotNull(organization)) {
+//
+//												WorkingUnit workingUnit = null;
+//
+//												try {
+//													workingUnit = WorkingUnitLocalServiceUtil
+//															.fetchByMappingOrganisationId(
+//																	themeDisplay
+//																			.getScopeGroupId(),
+//																	organization
+//																			.getOrganizationId());
+//												} catch (NoSuchWorkingUnitException e) {
+//
+//												}
+//
+//												if (Validator
+//														.isNotNull(workingUnit)) {
+//
+//													List<JobPos> jobPosList = new ArrayList<JobPos>();
+//
+//													jobPosList = JobPosLocalServiceUtil
+//															.getJobPoss(workingUnit
+//																	.getWorkingunitId());
+//
+//													if (jobPosList.size() > 0) {
+//
+//														for (JobPos jobPos : jobPosList) {
+//
+//															WorkJob workJob = null;
+//
+//															WorkJobPK workJobPK = new WorkJobPK(
+//																	jobPos.getJobPosId(),
+//																	workingUnit
+//																			.getWorkingunitId());
+//
+//															workJob = WorkJobLocalServiceUtil
+//																	.getWorkJob(workJobPK);
+//
+//															if (Validator
+//																	.isNotNull(workJob)) {
+//
+//																WorkJobLocalServiceUtil
+//																		.deleteWorkJob(workJob);
+//
+//															}
+//
+//															List<Employee> employeeList = new ArrayList<Employee>();
+//
+//															employeeList = EmployeeLocalServiceUtil
+//																	.getJobPosEmployees(jobPos
+//																			.getJobPosId());
+//
+//															if (employeeList
+//																	.size() > 0) {
+//
+//																for (Employee employee : employeeList) {
+//
+//																	EmployeeJobPK employeeJobPK = new EmployeeJobPK(
+//																			employee.getEmployeeId(),
+//																			jobPos.getJobPosId());
+//
+//																	EmployeeJobLocalServiceUtil
+//																			.deleteEmployeeJob(employeeJobPK);
+//
+//																}
+//															}
+//															JobPosLocalServiceUtil
+//																	.deleteJobPos(jobPos);
+//														}
+//
+//													}
+//													WorkingUnitLocalServiceUtil
+//															.deleteWorkingUnit(workingUnit);
+//												}
+//
+//												OrganizationLocalServiceUtil
+//														.deleteGroupOrganization(
+//																themeDisplay
+//																		.getScopeGroupId(),
+//																organization
+//																		.getOrganizationId());
+//											}
+											//////////////////////////////////////////////////////////////////////
+											
 											ServiceConfigLocalServiceUtil
 													.deleteServiceConfig(serviceConfig);
 										}
 									}
+
+									removeDossierContent(themeDisplay,
+											serviceInfo.getServiceinfoId());
+
 									ServiceInfoLocalServiceUtil
 											.deleteServiceInfo(serviceInfo);
 								}
@@ -1166,6 +1279,469 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 					}
 				}
 			}
+		} catch (Exception e) {
+			_log.error(e);
+		}
+	}
+
+	public void fetchByService(ActionRequest actionRequest,
+			ActionResponse actionResponse) {
+
+		String serviceDomain1 = ParamUtil.getString(actionRequest,
+				"serviceDomain");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+				.getAttribute(WebKeys.THEME_DISPLAY);
+
+		String[] arrayserviceDomain = StringUtil.split(serviceDomain1.trim(),
+				StringPool.PIPE);
+
+		List<String> serviceDomainList = Arrays.asList(arrayserviceDomain);
+
+		try {
+
+			if (serviceDomainList.size() > 0) {
+
+				for (int i = 0; i < serviceDomainList.size(); i++) {
+
+					DictItem dictItem_svDomain = null;
+					DictCollection dictCol_svDomain = null;
+					String serviceDomain = StringPool.BLANK;
+
+					serviceDomain = serviceDomainList.get(i);
+
+					try {
+
+						dictCol_svDomain = DictCollectionLocalServiceUtil
+								.getDictCollection(
+										themeDisplay.getScopeGroupId(),
+										WebKeys.SERVICE_DOMAIN);
+					} catch (NoSuchDictCollectionException e) {
+
+					}
+
+					if (Validator.isNotNull(dictCol_svDomain)) {
+
+						try {
+
+							dictItem_svDomain = DictItemLocalServiceUtil
+									.getDictItemInuseByItemCode(
+											dictCol_svDomain
+													.getDictCollectionId(),
+											serviceDomain);
+						} catch (NoSuchDictItemException e) {
+
+						}
+
+						if (Validator.isNotNull(dictItem_svDomain)) {
+
+							List<ServiceInfo> serviceInfoList = new ArrayList<ServiceInfo>();
+
+							serviceInfoList = ServiceInfoLocalServiceUtil
+									.getServiceInFosByG_DI(
+											themeDisplay.getScopeGroupId(),
+											dictItem_svDomain.getTreeIndex());
+
+							if (serviceInfoList.size() > 0) {
+
+								for (ServiceInfo serviceInfo : serviceInfoList) {
+
+									ServiceInfoUtils serviceInfoUtils = new ServiceInfoUtils();
+									serviceInfoUtils.fetchServiceInfo2(
+											themeDisplay, serviceInfo);
+
+									// /////////////////////////////
+									List<ServiceFileTemplate> serviceFileTemplateList = new ArrayList<ServiceFileTemplate>();
+
+									serviceFileTemplateList = ServiceFileTemplateLocalServiceUtil
+											.getServiceFileTemplatesByServiceInfo(serviceInfo
+													.getServiceinfoId());
+
+									_log.info("=====serviceInfo.getServiceinfoId():"
+											+ serviceInfo.getServiceinfoId());
+
+									if (serviceFileTemplateList.size() > 0) {
+
+										for (ServiceFileTemplate serviceFileTemplate : serviceFileTemplateList) {
+
+											_log.info("=====serviceFileTemplate.getTemplatefileId():"
+													+ serviceFileTemplate
+															.getTemplatefileId());
+
+											ServiceInfoTemplateFileUtils serviceInfoTemplateFileUtils = new ServiceInfoTemplateFileUtils();
+
+											serviceInfoTemplateFileUtils
+													.fetchServiceTemplateFile2(
+															themeDisplay,
+															serviceFileTemplate);
+
+											TemplateFile templateFile = null;
+
+											try {
+												templateFile = TemplateFileLocalServiceUtil
+														.getTemplateFile(serviceFileTemplate
+																.getTemplatefileId());
+											} catch (NoSuchTemplateFileException e) {
+
+											}
+											if (Validator
+													.isNotNull(templateFile)) {
+												
+												_log.info("=====templateFile.getTemplatefileId():"
+														+ templateFile
+																.getTemplatefileId());
+												
+												TemplateFileUtils templateFileUtils = new TemplateFileUtils();
+												templateFileUtils
+														.fetchTemplateFile2(
+																themeDisplay,
+																templateFile);
+											}
+
+										}
+									}
+
+									// /////////////////////////////
+
+									List<ServiceConfig> serviceConfigList = new ArrayList<ServiceConfig>();
+
+									serviceConfigList = ServiceConfigLocalServiceUtil
+											.getServiceConfigsByS_G(serviceInfo
+													.getServiceinfoId(),
+													themeDisplay
+															.getScopeGroupId());
+
+									if (serviceConfigList.size() > 0) {
+
+										for (ServiceConfig serviceConfig : serviceConfigList) {
+											
+											_log.info("=====serviceConfig.getServiceConfigId():"
+													+ serviceConfig
+															.getServiceConfigId());
+
+											ServiceConfigUtils serviceConfigUtils = new ServiceConfigUtils();
+											serviceConfigUtils
+													.fetchServiceConfig2(
+															themeDisplay,
+															serviceConfig);
+
+											DossierTemplate dossierTemplate = null;
+
+											try {
+												dossierTemplate = DossierTemplateLocalServiceUtil
+														.getDossierTemplate(serviceConfig
+																.getDossierTemplateId());
+											} catch (NoSuchDossierTemplateException e) {
+
+											}
+
+											if (Validator
+													.isNotNull(dossierTemplate)) {
+												
+												_log.info("=====dossierTemplate.getDossierTemplateId():"+dossierTemplate.getDossierTemplateId());
+
+												DossierTemplateUtils dossierTemplateUtils = new DossierTemplateUtils();
+												
+												dossierTemplateUtils
+														.fetchDossierTemplate2(
+																themeDisplay,
+																dossierTemplate);
+
+												List<DossierPart> dossierPartList = new ArrayList<DossierPart>();
+
+												dossierPartList = DossierPartLocalServiceUtil
+														.getDossierParts(dossierTemplate
+																.getDossierTemplateId());
+
+												if (dossierPartList.size() > 0) {
+
+													for (DossierPart dossierPart : dossierPartList) {
+														
+														_log.info("=====dossierPart.getDossierpartId():"+dossierPart.getDossierpartId());
+
+														DossierPartUtils dossierPartUtils = new DossierPartUtils();
+														dossierPartUtils
+																.fetchDossierPart2(
+																		themeDisplay,
+																		dossierPart);
+
+													}
+												}
+
+											}
+
+											// ///////////////////////////////
+
+											ServiceProcess serviceProcess = null;
+
+											try {
+
+												serviceProcess = ServiceProcessLocalServiceUtil
+														.getServiceProcess(serviceConfig
+																.getServiceProcessId());
+											} catch (Exception e) {
+
+											}
+
+											if (Validator
+													.isNotNull(serviceProcess)) {
+												
+												_log.info("=====serviceProcess.getServiceProcessId():"+serviceProcess.getServiceProcessId());
+
+												ServiceProcessUtils serviceProcessUtils = new ServiceProcessUtils();
+												serviceProcessUtils
+														.fetchServiceProcess2(
+																themeDisplay,
+																serviceProcess);
+
+												// //////////////////////////////
+
+												List<ProcessWorkflow> processWorkflowList = new ArrayList<ProcessWorkflow>();
+
+												processWorkflowList = ProcessWorkflowLocalServiceUtil
+														.getWorkFlowByProcess(serviceProcess
+																.getServiceProcessId());
+
+												if (processWorkflowList.size() > 0) {
+
+													for (ProcessWorkflow processWorkflow : processWorkflowList) {
+														
+														_log.info("=====processWorkflow.getProcessWorkflowId():"+processWorkflow.getProcessWorkflowId());
+
+														WorkflowUtils workflowUtils = new WorkflowUtils();
+
+														workflowUtils
+																.fetchProcessWorkflow(
+																		themeDisplay,
+																		processWorkflow);
+
+														List<WorkflowOutput> workflowOutputList = new ArrayList<WorkflowOutput>();
+
+														workflowOutputList = WorkflowOutputLocalServiceUtil
+																.getByProcessWF(processWorkflow
+																		.getProcessWorkflowId());
+
+														if (workflowOutputList
+																.size() > 0) {
+
+															for (WorkflowOutput workflowOutput : workflowOutputList) {
+																
+																_log.info("=====workflowOutput.getWorkflowOutputId():"+workflowOutput.getWorkflowOutputId());
+
+																WorkflowOutputUtils workflowOutputUtils = new WorkflowOutputUtils();
+																workflowOutputUtils
+																		.fetchWorkflowOutput2(
+																				themeDisplay,
+																				workflowOutput);
+															}
+														}
+
+													}
+												}
+
+												// /////////////////////////////
+
+												List<ProcessStep> processStepList = new ArrayList<ProcessStep>();
+
+												processStepList = ProcessStepLocalServiceUtil
+														.getStepByProcess(serviceProcess
+																.getServiceProcessId());
+
+												if (processStepList.size() > 0) {
+
+													for (ProcessStep processStep : processStepList) {
+														
+														_log.info("=====processStep.getProcessStepId():"+processStep.getProcessStepId());
+
+														ProcessStepUtils processStepUtils = new ProcessStepUtils();
+														processStepUtils
+																.fetchProcessStep2(
+																		themeDisplay,
+																		processStep);
+
+														List<StepAllowance> stepAllowanceList = new ArrayList<StepAllowance>();
+
+														stepAllowanceList = StepAllowanceLocalServiceUtil
+																.getByProcessStep(processStep
+																		.getProcessStepId());
+
+														if (stepAllowanceList
+																.size() > 0) {
+
+															for (StepAllowance stepAllowance : stepAllowanceList) {
+																
+																_log.info("=====stepAllowance.getProcessStepId():"+stepAllowance.getProcessStepId());
+
+																StepAllowanceUtils stepAllowanceUtils = new StepAllowanceUtils();
+																stepAllowanceUtils
+																		.fetchStepAllowance2(
+																				themeDisplay,
+																				stepAllowance);
+															}
+
+														}
+														List<ProcessStepDossierPart> processStepDossierPartList = new ArrayList<ProcessStepDossierPart>();
+
+														processStepDossierPartList = ProcessStepDossierPartLocalServiceUtil
+																.getByStep(processStep
+																		.getProcessStepId());
+
+														if (processStepDossierPartList
+																.size() > 0) {
+
+															for (ProcessStepDossierPart processStepDossierPart : processStepDossierPartList) {
+																
+																_log.info("=====processStepDossierPart.getProcessStepId():"+processStepDossierPart.getProcessStepId());
+
+																ProcessStepDossiderPartUtils processStepDossiderPartUtils = new ProcessStepDossiderPartUtils();
+																processStepDossiderPartUtils
+																		.fetchProcessStepDossierPart2(
+																				themeDisplay,
+																				processStepDossierPart);
+															}
+
+														}
+													}
+
+												}
+
+											}
+
+										}
+									}
+
+									// removeDossierContent(themeDisplay,
+									// serviceInfo.getServiceinfoId());
+								}
+							}
+
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			_log.error(e);
+		}
+	}
+	
+	public void removeDossierContent(ThemeDisplay themeDisplay,
+			long serviceInfoId) {
+
+		try {
+
+			if (serviceInfoId > 0) {
+				List<Dossier> dossierList = new ArrayList<Dossier>();
+
+				dossierList = DossierLocalServiceUtil
+						.getDossiersByServiceInfo(serviceInfoId);
+
+				if (dossierList.size() > 0) {
+
+					for (Dossier dossier : dossierList) {
+
+						ProcessOrder processOrder = null;
+
+						try {
+							processOrder = ProcessOrderLocalServiceUtil
+									.findBy_Dossier(dossier.getDossierId());
+						} catch (Exception e) {
+
+						}
+
+						if (Validator.isNotNull(processOrder)) {
+
+							List<ActionHistory> actionHistoryList = new ArrayList<ActionHistory>();
+
+							actionHistoryList = ActionHistoryLocalServiceUtil
+									.getActionHistoriesByG_PORD(
+											themeDisplay.getScopeGroupId(),
+											processOrder.getProcessOrderId(),
+											QueryUtil.ALL_POS,
+											QueryUtil.ALL_POS);
+
+							if (actionHistoryList.size() > 0) {
+
+								for (ActionHistory actionHistory : actionHistoryList) {
+
+									ActionHistoryLocalServiceUtil
+											.deleteActionHistory(actionHistory);
+								}
+							}
+							ProcessOrderLocalServiceUtil
+									.deleteProcessOrder(processOrder);
+						}
+						// /////////////////////////////////////////////////////////////
+						List<DossierFile> dossierFileList = new ArrayList<DossierFile>();
+
+						dossierFileList = DossierFileLocalServiceUtil
+								.getDossierFileByDossierId(dossier
+										.getDossierId());
+
+						if (dossierFileList.size() > 0) {
+
+							for (DossierFile dossierFile : dossierFileList) {
+
+								DossierFileLocalServiceUtil
+										.deleteDossierFile(dossierFile);
+							}
+
+						}
+						// /////////////////////////////////////////////////////////////
+						List<DossierLog> dossierLogList = new ArrayList<DossierLog>();
+
+						dossierLogList = DossierLogLocalServiceUtil
+								.getDossierLogByDossierId(dossier
+										.getDossierId());
+
+						if (dossierLogList.size() > 0) {
+
+							for (DossierLog dossierLog : dossierLogList) {
+
+								List<DossierFileLog> dossierFileLogList = new ArrayList<DossierFileLog>();
+
+								try {
+									dossierFileLogList = DossierFileLogLocalServiceUtil
+											.getFileLogs(dossierLog
+													.getDossierLogId(), dossier
+													.getDossierId());
+								} catch (Exception e) {
+
+								}
+
+								if (dossierFileLogList.size() > 0) {
+
+									for (DossierFileLog dossierFileLog : dossierFileLogList) {
+
+										DossierFileLogLocalServiceUtil
+												.deleteDossierFileLog(dossierFileLog);
+									}
+								}
+
+								DossierLogLocalServiceUtil
+										.deleteDossierLog(dossierLog);
+							}
+						}
+						// /////////////////////////////////////////////////////////////
+						List<PaymentFile> paymentFileList = new ArrayList<PaymentFile>();
+
+						paymentFileList = PaymentFileLocalServiceUtil
+								.getPaymentFileByD_(dossier.getDossierId());
+
+						if (paymentFileList.size() > 0) {
+
+							for (PaymentFile paymentFile : paymentFileList) {
+
+								PaymentFileLocalServiceUtil
+										.deletePaymentFile(paymentFile);
+							}
+						}
+						DossierLocalServiceUtil.deleteDossier(dossier);
+					}
+
+				}
+			}
+
 		} catch (Exception e) {
 			_log.error(e);
 		}
@@ -1245,8 +1821,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			_log.equals(e);
 		}
 	}
-	
-
 
 	// /////////////////////////////////////////////////////
 	public void fetchDossiers(ActionRequest actionRequest,
@@ -1290,7 +1864,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierLogUtils utils = new DossierLogUtils();
 		utils.fetchDossierLog(actionRequest, actionResponse);
-		;
 	}
 
 	public void addDossierLog(ActionRequest actionRequest,
@@ -1298,7 +1871,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierLogUtils utils = new DossierLogUtils();
 		utils.addDossierLog(actionRequest, actionResponse);
-		;
 	}
 
 	// /////////////////////////////////////////////////////
@@ -1308,7 +1880,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierFileLogUtils utils = new DossierFileLogUtils();
 		utils.fetchDossierFileLog(actionRequest, actionResponse);
-		;
 	}
 
 	public void addDossierFileLog(ActionRequest actionRequest,
@@ -1316,7 +1887,6 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 		DossierFileLogUtils utils = new DossierFileLogUtils();
 		utils.addDossierFileLog(actionRequest, actionResponse);
-		;
 	}
 
 	// /////////////////////////////////////////////////////
@@ -1325,7 +1895,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 			ActionResponse actionResponse) throws Exception {
 
 		ProcessOrderUtils utils = new ProcessOrderUtils();
-		utils.fetchProcessOrders(actionRequest, actionResponse);
+		utils.fetchProcessOrders2(actionRequest, actionResponse);
 
 	}
 
@@ -1377,13 +1947,15 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 	public void fetchAllDossierContent(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
-		fetchDossiers(actionRequest, actionResponse);
-		fetchDossierFile(actionRequest, actionResponse);
-		fetchDossierLog(actionRequest, actionResponse);
-		fetchDossierFileLog(actionRequest, actionResponse);
+		// fetchDossiers(actionRequest, actionResponse);
+		// fetchDossierFile(actionRequest, actionResponse);
+		// fetchDossierLog(actionRequest, actionResponse);
+		// fetchDossierFileLog(actionRequest, actionResponse);
+		// fetchProcessOrders(actionRequest, actionResponse);
+		// fetchPaymentFiles(actionRequest, actionResponse);
+		// fetchActionhistory(actionRequest, actionResponse);
+
 		fetchProcessOrders(actionRequest, actionResponse);
-		fetchPaymentFiles(actionRequest, actionResponse);
-		fetchActionhistory(actionRequest, actionResponse);
 
 	}
 
@@ -1431,27 +2003,44 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 		commonUtils.setUserGroup(actionRequest, actionResponse);
 
 	}
-	
+
 	public void testServiceProcess(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
-		
+
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 				.getAttribute(WebKeys.THEME_DISPLAY);
-		
+
 		ServiceProcess serviceProcess = null;
 
 		try {
 
-			serviceProcess = ServiceProcessLocalServiceUtil
-					.getServiceProcess(themeDisplay.getScopeGroupId(),
-							"dddfghjgh");
-		} catch (NoSuchServiceProcessException e) {
+			serviceProcess = ServiceProcessLocalServiceUtil.getServiceProcess(
+					themeDisplay.getScopeGroupId(), "dddfghjgh");
+		} catch (Exception e) {
 
 		}
-		
-		_log.info("==serviceProcess:"+serviceProcess);
+
+		_log.info("==serviceProcess:" + serviceProcess);
 
 	}
+	
+	public void changeUrlFromServiceInstruction(ActionRequest actionRequest,
+			ActionResponse actionResponse){
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		
+		
+	}
+	
+	public void updateDossierInfo(ActionRequest actionRequest,
+			ActionResponse actionResponse){
+		
+		CommonUtils commonUtils = new CommonUtils();
+		commonUtils.updateDossierInfo(actionRequest, actionResponse);
+	}
+
 	private static Log _log = LogFactoryUtil
 			.getLog(DataMgtConvertPortlet.class);
 }

@@ -381,7 +381,7 @@ public class BusinessUtils {
 						business.setMappingOrganizationId(Long.valueOf(mappingOrganizationIdNew));
 					}
 
-					BusinessLocalServiceUtil.updateBusiness(business);
+					BusinessLocalServiceUtil.addBusiness(business);
 
 					ExpandoValueLocalServiceUtil.addValue(
 						themeDisplay.getCompanyId(), WebKeys.BUSINESS,

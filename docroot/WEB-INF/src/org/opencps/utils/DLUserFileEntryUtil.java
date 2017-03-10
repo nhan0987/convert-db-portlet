@@ -1,5 +1,6 @@
 package org.opencps.utils;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import javax.portlet.ActionRequest;
@@ -14,7 +15,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -78,6 +78,114 @@ public class DLUserFileEntryUtil {
 			e.printStackTrace();
 		}
 		return fileEntryId;
+	}
+	
+	public String getServiceInstructionUrl(ActionRequest actionRequest,ActionResponse actionResponse,String fileUrl){
+		
+		if(Validator.isNotNull(fileUrl)){
+			
+			long fileEntryId = 0;
+			
+			JSONObject jsonData = null;
+			
+			try {
+				jsonData = GetFileFromURL.requestFileFromURL(fileUrl);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(Validator.isNotNull(jsonData)){
+				
+				fileEntryId =uploadFile(actionRequest, actionResponse, jsonData);
+				
+			}
+		}
+		
+		return StringPool.BLANK;
+	}
+	
+	private long uploadFile(ActionRequest actionRequest,
+			ActionResponse actionResponse, JSONObject jsonData) {
+
+		long entryFileId = 0;
+		FileEntry fileEntry = null;
+
+		try {
+
+			if (Validator.isNotNull(jsonData)) {
+
+				ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+						.getAttribute(WebKeys.THEME_DISPLAY);
+
+				ServiceContext serviceContext = ServiceContextFactory
+						.getInstance(actionRequest);
+
+				serviceContext.setAddGroupPermissions(true);
+				serviceContext.setAddGuestPermissions(true);
+				
+				byte[] fileBytes = null;
+				fileBytes = jsonData.getString("fileBytes").getBytes();
+				
+				
+				
+
+				long repositoryId = themeDisplay.getScopeGroupId();
+				long folderId = 0;
+				String sourceFileName = StringPool.BLANK;
+				String extension = StringPool.BLANK;
+
+				extension = jsonData.getString("fileExtension");
+
+				Calendar cal = Calendar.getInstance();
+
+				sourceFileName = StringPool.UNDERLINE + cal.getTimeInMillis();
+
+				String description = StringPool.BLANK;
+				String title = sourceFileName + StringPool.PERIOD + extension;
+				String changeLog = StringPool.BLANK;
+
+				String mimeType = MimeTypesUtil.getContentType(jsonData.getString("fileName"));
+				
+				
+				
+
+				Folder folderFile = initFolderService(actionRequest,
+						themeDisplay);
+
+				if (Validator.isNotNull(folderFile)) {
+					folderId = folderFile.getFolderId();
+				}
+
+				try {
+
+					fileEntry = DLAppServiceUtil.addFileEntry(repositoryId,
+							folderId, sourceFileName, mimeType, title,
+							description, changeLog, fileBytes, serviceContext);
+				} catch (Exception e) {
+
+					if (e instanceof DuplicateFileException) {
+
+					}
+				}
+
+				if (Validator.isNotNull(fileEntry)) {
+					entryFileId = fileEntry.getFileEntryId();
+
+					AssetPublisherUtil.addAndStoreSelection(actionRequest,
+							DLFileEntry.class.getName(),
+							fileEntry.getFileEntryId(), -1);
+
+					AssetPublisherUtil.addRecentFolderId(actionRequest,
+							DLFileEntry.class.getName(), folderId);
+				}
+			}
+
+		} catch (Exception e) {
+			_log.error(e);
+		}
+
+		return entryFileId;
 	}
 
 	private long uploadFile(ActionRequest actionRequest,

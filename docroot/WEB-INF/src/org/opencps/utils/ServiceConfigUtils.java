@@ -509,7 +509,7 @@ public class ServiceConfigUtils {
 							serviceConfig.setGovAgencyIndex(govAgencyIndex);
 						}
 
-						ServiceConfigLocalServiceUtil.updateServiceConfig(serviceConfig);
+						ServiceConfigLocalServiceUtil.addServiceConfig(serviceConfig);
 
 						ExpandoValueLocalServiceUtil.addValue(
 							themeDisplay.getCompanyId(), WebKeys.SERVICE_CONFIG,
@@ -533,6 +533,166 @@ public class ServiceConfigUtils {
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fetchServiceConfig2(ThemeDisplay themeDisplay,
+			ServiceConfig object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_ServiceConfig,
+						WebKeys.SERVICE_CONFIG, WebKeys.ServiceConfigColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getServiceConfigId());
+
+				JSONObject columnNames = WebKeys.getServiceConfigColumnNames();
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceInfoId"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceInfoId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceDomainIndex"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceDomainIndex()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceAdministrationIndex"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceAdministrationIndex()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("dossierTemplateId"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getDossierTemplateId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("govAgencyCode"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getGovAgencyCode()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("govAgencyName"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getGovAgencyName()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("govAgencyOrganizationId"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getGovAgencyOrganizationId()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("sericeMode"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceMode()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceProcessId"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceProcessId()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("domainCode"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getDomainCode()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceInstruction"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceInstruction()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceLevel"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceLevel()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("servicePortal"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServicePortal()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceOnegate"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceOnegate()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceBackOffice"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceBackoffice()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceCitizen"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceCitizen()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceBusiness"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getServiceBusinees()));
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("govAgencyIndex"),
+						object.getServiceConfigId(),
+						String.valueOf(object.getGovAgencyIndex()));
+				// /
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.SERVICE_CONFIG,
+						WebKeys.EXTableName_ServiceConfig,
+						columnNames.getString("serviceConfigNew"),
+						object.getServiceConfigId(), StringPool.BLANK);
+
+				_log.info("=====serviceConfigId:" + object.getServiceConfigId());
+
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,6 +1,7 @@
 package org.opencps.utils;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -14,13 +15,17 @@ import org.opencps.datamgt.NoSuchDictCollectionException;
 import org.opencps.datamgt.NoSuchDictItemException;
 import org.opencps.datamgt.model.DictItem;
 import org.opencps.datamgt.service.DictItemLocalServiceUtil;
+import org.opencps.dossiermgt.model.Dossier;
+import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
 import org.opencps.expando.model.DomainConfigExt;
 import org.opencps.expando.model.ExpandoExt;
 import org.opencps.expando.service.DomainConfigExtLocalServiceUtil;
 import org.opencps.expando.service.ExpandoExtLocalServiceUtil;
+import org.opencps.modifier.service.UsersOrgsLocalServiceUtil;
 import org.opencps.usermgt.model.Employee;
 import org.opencps.usermgt.service.EmployeeLocalServiceUtil;
 import org.opencps.util.AccountBean;
+import org.opencps.util.AccountUtil;
 import org.opencps.util.PortletPropsValues;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -29,6 +34,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -36,7 +42,9 @@ import com.liferay.portal.model.ClassName;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.expando.NoSuchTableException;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
@@ -442,18 +450,24 @@ public class CommonUtils {
 
 			List<Citizen> citizenList = CitizenLocalServiceUtil.getCitizens(
 					QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
+			int i = 0;
 			for (Citizen citizen : citizenList) {
+				_log.info("+++i:"+i);
 				userId = 0;
 
 				userId = citizen.getMappingUserId();
 
 				if (userId > 0) {
+					
+					_log.info("+userId:" + userId);
+					_log.info("=userGroupsCitizen.getUserGroupId():"
+							+ userGroupsCitizen.getUserGroupId());
 
 					UserGroupLocalServiceUtil.addUserUserGroup(userId,
 							userGroupsCitizen.getUserGroupId());
 
 				}
+				i++;
 
 			}
 			// ////////////////////////////
@@ -461,35 +475,77 @@ public class CommonUtils {
 					.getBusinesses(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 			for (Business business : businessList) {
+				
+				_log.info("+++i:"+i);
 				userId = 0;
 
 				userId = business.getMappingUserId();
 
 				if (userId > 0) {
+					
+					_log.info("+userId:" + userId);
+					_log.info("=userGroupsBusiness.getUserGroupId():"
+							+ userGroupsBusiness.getUserGroupId());
 
 					UserGroupLocalServiceUtil.addUserUserGroup(userId,
 							userGroupsBusiness.getUserGroupId());
+					
+					if(business.getMappingOrganizationId() >0){
+						
+						_log.info("+usebusiness.getMappingOrganizationId():" + business.getMappingOrganizationId());
+						
+						try {
+//							UsersOrgsLocalServiceUtil
+//									.addUsersOrgs(
+//											business.getMappingOrganizationId(),
+//											userId);
+							
+							UserLocalServiceUtil.addOrganizationUser(business.getMappingOrganizationId(), userId);
+						} catch (SystemException e) {
+							_log.error(e);
+						}
+						
+					}
 
 				}
+				i++;
 
 			}
 			// ///////////////////////////
-			List<Employee> employeeList = EmployeeLocalServiceUtil
-					.getEmployees(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-
-			for (Employee employee : employeeList) {
-				userId = 0;
-
-				userId = employee.getMappingUserId();
-
-				if (userId > 0) {
-
-					UserGroupLocalServiceUtil.addUserUserGroup(userId,
-							userGroupsEmployee.getUserGroupId());
-
-				}
-
-			}
+//			List<Employee> employeeList = EmployeeLocalServiceUtil
+//					.getEmployees(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+//
+//			for (Employee employee : employeeList) {
+//				_log.info("+++i:"+i);
+//				userId = 0;
+//
+//				userId = employee.getMappingUserId();
+//
+//				if (userId > 0) {
+//					
+//					_log.info("+userId:" + userId);
+//					_log.info("=userGroupsEmployee.getUserGroupId():"
+//							+ userGroupsEmployee.getUserGroupId());
+//
+//					UserGroup userGroup = null;
+//					userGroup = UserGroupLocalServiceUtil
+//							.getUserGroup(userGroupsEmployee.getUserGroupId());
+//
+//					if (Validator.isNotNull(userGroup)) {
+//
+//						_log.info("+userGroup.getUserGroupId():"
+//								+ userGroup.getUserGroupId());
+//
+//					} else {
+//
+//					UserGroupLocalServiceUtil.addUserUserGroup(userId,
+//							userGroupsEmployee.getUserGroupId());
+//					}
+//
+//				}
+//				i++;
+//
+//			}
 		} catch (PortalException | SystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -497,7 +553,171 @@ public class CommonUtils {
 
 	}
 	
-	
+	public void updateDossierInfo(ActionRequest actionRequest,
+			ActionResponse actionResponse) {
 
+		try {
+
+			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+					.getAttribute(WebKeys.THEME_DISPLAY);
+
+			ServiceContext serviceContext = ServiceContextFactory
+					.getInstance(actionRequest);
+			
+			String govAgencyCode = ParamUtil.getString(actionRequest, "govAgencyCode",StringPool.BLANK);
+			
+			_log.info("=====govAgencyCode:"+govAgencyCode);
+
+			long userId = 0;
+
+			List<Dossier> dossierList = DossierLocalServiceUtil.getDossiers(
+					QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+			String cityCode = StringPool.BLANK;
+			String cityName = StringPool.BLANK;
+			String districtCode = StringPool.BLANK;
+			String districtName = StringPool.BLANK;
+			String wardName = StringPool.BLANK;
+			String wardCode = StringPool.BLANK;
+
+			String address = StringPool.BLANK;
+			String contactName = StringPool.BLANK;
+			String contactTelNo = StringPool.BLANK;
+			String contactEmail = StringPool.BLANK;
+
+			CommonUtils commonUtils = new CommonUtils();
+			
+			boolean confirm = true;
+			
+			int i=0;
+
+			for (Dossier dossier : dossierList) {
+				
+				_log.info("+i:"+i);
+				
+				if (govAgencyCode.length() > 0) {
+
+					if (dossier.getGovAgencyCode().contains(govAgencyCode)) {
+						confirm = true;
+					} else {
+						confirm = false;
+					}
+				}
+
+				userId = dossier.getUserId();
+
+				if (userId > 0 && confirm) {
+					
+					_log.info("=====userId:"+userId);
+
+					cityCode = StringPool.BLANK;
+					cityName = StringPool.BLANK;
+					districtCode = StringPool.BLANK;
+					districtName = StringPool.BLANK;
+					wardName = StringPool.BLANK;
+					wardCode = StringPool.BLANK;
+
+					address = StringPool.BLANK;
+					contactName = StringPool.BLANK;
+					contactTelNo = StringPool.BLANK;
+					contactEmail = StringPool.BLANK;
+
+					AccountBean accountBean = null;
+					
+					try {
+
+						accountBean = AccountUtil.getAccountBean(userId,
+								themeDisplay.getScopeGroupId(), null);
+					} catch (Exception e) {
+						_log.error(e);
+					}
+
+					Citizen citizen = null;
+					Business bussines = null;
+
+					if (Validator.isNotNull(accountBean)) {
+						
+						
+						
+
+						if (accountBean.isCitizen()) {
+							_log.info("=====accountBean.isCitizen():"+accountBean.isCitizen());
+							citizen = (Citizen) accountBean
+									.getAccountInstance();
+
+							districtCode = citizen.getDistrictCode();
+
+							wardCode = citizen.getWardCode();
+							cityCode = citizen.getCityCode();
+							districtCode = citizen.getDistrictCode();
+
+							contactName = citizen.getFullName();
+							contactTelNo = citizen.getTelNo();
+							contactEmail = citizen.getEmail();
+							address = citizen.getAddress();
+
+							accountBean = commonUtils.getItemNameByCode(
+									wardCode, districtCode, cityCode,
+									serviceContext);
+
+							wardName = accountBean.getWardName();
+							cityName = accountBean.getCityName();
+							districtName = accountBean.getDistricName();
+
+						} else if (accountBean.isBusiness()) {
+							
+							_log.info("=====accountBean.isCitizen():"+accountBean.isBusiness());
+							bussines = (Business) accountBean
+									.getAccountInstance();
+
+							wardCode = bussines.getWardCode();
+							cityCode = bussines.getCityCode();
+							districtCode = bussines.getDistrictCode();
+
+							contactName = bussines.getName();
+							contactTelNo = bussines.getTelNo();
+							contactEmail = bussines.getEmail();
+							address = bussines.getAddress();
+
+							accountBean = commonUtils.getItemNameByCode(
+									wardCode, districtCode, cityCode,
+									serviceContext);
+
+							wardName = accountBean.getWardName();
+							cityName = accountBean.getCityName();
+							districtName = accountBean.getDistricName();
+							
+							_log.info("=====bussines.getMappingOrganizationId():"+bussines.getMappingOrganizationId());
+							
+							dossier.setOwnerOrganizationId(bussines.getMappingOrganizationId());
+
+						}
+						
+						dossier.setModifiedDate(new Date());
+						dossier.setWardCode(wardCode);
+						dossier.setCityCode(cityCode);
+						dossier.setDistrictCode(districtCode);
+						
+						dossier.setContactName(contactName);
+						dossier.setContactTelNo(contactTelNo);
+						dossier.setContactEmail(contactEmail);
+						
+						dossier.setWardName(wardName);
+						dossier.setCityName(cityName);
+						dossier.setDistrictName(districtName);
+						
+						dossier.setAddress(address);
+						
+						DossierLocalServiceUtil.updateDossier(dossier);
+					}
+
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			_log.error(e);
+		}
+
+	}
 	public static final String ADMINISTRATIVE_REGION = "ADMINISTRATIVE_REGION";
 }

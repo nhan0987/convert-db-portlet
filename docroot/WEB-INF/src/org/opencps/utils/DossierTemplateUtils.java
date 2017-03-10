@@ -175,7 +175,7 @@ public class DossierTemplateUtils {
 					dossierTemplate.setUserId(themeDisplay.getUserId());
 
 					DossierTemplateLocalServiceUtil
-							.updateDossierTemplate(dossierTemplate);
+							.addDossierTemplate(dossierTemplate);
 
 					ExpandoValueLocalServiceUtil.addValue(themeDisplay
 							.getCompanyId(), WebKeys.DOSSIER_TEMPLATE,
@@ -195,6 +195,62 @@ public class DossierTemplateUtils {
 											.getDossierTemplateId()));
 
 				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fetchDossierTemplate2(ThemeDisplay themeDisplay,
+			DossierTemplate object) {
+
+		try {
+
+			if (Validator.isNotNull(object)) {
+
+				long companyId = themeDisplay.getCompanyId();
+
+				CommonUtils commonUtils = new CommonUtils();
+
+				ExpandoTable expandoTable = commonUtils.checkTable(companyId,
+						WebKeys.EXTableName_DossierTemplate,
+						WebKeys.DOSSIER_TEMPLATE,
+						WebKeys.DossierTemplateColumns);
+
+				ExpandoRowLocalServiceUtil.addRow(expandoTable.getTableId(),
+						object.getDossierTemplateId());
+
+				JSONObject ColumnNames = WebKeys
+						.getDossierTemplateColumnNames();
+
+				ExpandoValueLocalServiceUtil
+						.addValue(companyId, WebKeys.DOSSIER_TEMPLATE,
+								WebKeys.EXTableName_DossierTemplate,
+								ColumnNames.getString("templateName"),
+								object.getDossierTemplateId(),
+								object.getTemplateName());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_TEMPLATE,
+						WebKeys.EXTableName_DossierTemplate,
+						ColumnNames.getString("description"),
+						object.getDossierTemplateId(), object.getDescription());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_TEMPLATE,
+						WebKeys.EXTableName_DossierTemplate,
+						ColumnNames.getString("templateNo"),
+						object.getDossierTemplateId(), object.getTemplateNo());
+
+				ExpandoValueLocalServiceUtil.addValue(companyId,
+						WebKeys.DOSSIER_TEMPLATE,
+						WebKeys.EXTableName_DossierTemplate,
+						ColumnNames.getString("dossierTemplateIdNew"),
+						object.getDossierTemplateId(), StringPool.BLANK);
+
+				_log.info("=====dossierTemplateId:"
+						+ object.getDossierTemplateId());
 
 			}
 		} catch (Exception e) {
