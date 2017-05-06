@@ -1,6 +1,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -219,6 +220,9 @@ public class ServiceProcessUtils {
 					serviceProcess.setCompanyId(themeDisplay.getCompanyId());
 					serviceProcess.setUserId(serviceContext.getUserId());
 					serviceProcess.setGroupId(themeDisplay.getScopeGroupId());
+					
+					serviceProcess.setCreateDate(new Date());
+					serviceProcess.setModifiedDate(new Date());
 
 					ServiceProcessLocalServiceUtil
 							.addServiceProcess(serviceProcess);

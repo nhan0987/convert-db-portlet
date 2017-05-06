@@ -65,7 +65,7 @@ public class DictCollectionUtils {
 
 			for (DictCollection dictCollection : dictCollectionList) {
 
-				if (!ArrayUtil.contains(arrayCollectionCode,
+				if (ArrayUtil.contains(arrayCollectionCode,
 						dictCollection.getCollectionCode())) {
 
 					ExpandoRowLocalServiceUtil.addRow(

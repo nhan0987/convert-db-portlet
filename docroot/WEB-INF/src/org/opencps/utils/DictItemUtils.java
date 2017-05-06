@@ -77,7 +77,7 @@ public class DictItemUtils {
 					dictCollection = DictCollectionLocalServiceUtil
 							.getDictCollection(dictItem.getDictCollectionId());
 
-					if (!ArrayUtil.contains(arrayCollectionCode,
+					if (ArrayUtil.contains(arrayCollectionCode,
 							dictCollection.getCollectionCode())) {
 
 						ExpandoRowLocalServiceUtil.addRow(
@@ -469,7 +469,7 @@ public class DictItemUtils {
 					dictCollection = DictCollectionLocalServiceUtil
 							.getDictCollection(object.getDictCollectionId());
 
-					if (!ArrayUtil.contains(arrayCollectionCode,
+					if (ArrayUtil.contains(arrayCollectionCode,
 							dictCollection.getCollectionCode())) {
 
 						String classPK = object.getItemDescription();

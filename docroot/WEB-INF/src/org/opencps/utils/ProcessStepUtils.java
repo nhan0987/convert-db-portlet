@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -207,12 +208,15 @@ public class ProcessStepUtils {
 					? Integer.valueOf(sequenceNo) : 0);
 				processStep.setDossierStatus(dossierStatus);
 				processStep.setDaysDuration(Validator.isNotNull(dayDuration)
-					? Integer.valueOf(dayDuration) : 0);
+					? String.valueOf(dayDuration) : StringPool.BLANK);
 				processStep.setDossierSubStatus(dossierSubStatus);
 
 				processStep.setCompanyId(themeDisplay.getCompanyId());
 				processStep.setGroupId(serviceContext.getScopeGroupId());
 				processStep.setUserId(serviceContext.getUserId());
+				
+				processStep.setCreateDate(new Date());
+				processStep.setModifiedDate(new Date());
 
 				ProcessStepLocalServiceUtil.addProcessStep(processStep);
 

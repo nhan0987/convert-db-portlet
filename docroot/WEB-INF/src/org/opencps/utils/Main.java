@@ -15,7 +15,7 @@ import com.liferay.portal.kernel.util.StringPool;
 public class Main {
 	
 	private static final String USER_AGENT = "Mozilla/5.0";
-	public static final String DOMAIN_NAME = "http://qa.opencps.vn";
+	public static final String DOMAIN_NAME = "http://captinh.opencps.vn/api/jsonws/opencps-portlet.api/adddossier";
 	public static final String URL_FRIENDLY = "api/jsonws/dlapp/get-file-entry/file-entry-id/";
 	public static final String URL_FRIENDLY_GETFILE = "/c/document_library/get_file?";
 	
@@ -39,6 +39,7 @@ public class Main {
 			con.setRequestMethod("GET");// By default it is GET request
 			con.setRequestProperty("User-Agent", USER_AGENT);// add request header
 			// String userpass = "admin.qa@fds.vn" + ":" + "LoveOpencps!2016@@";
+			con.setRequestProperty("Authorization", basicAuth);
 			con.setRequestProperty("Authorization", basicAuth);
 
 			int responseCode = con.getResponseCode();

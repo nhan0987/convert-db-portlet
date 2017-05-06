@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -181,6 +182,9 @@ public class TemplateFileUtils {
 					templateFile.setCompanyId(themeDisplay.getCompanyId());
 					templateFile.setGroupId(themeDisplay.getScopeGroupId());
 					templateFile.setUserId(serviceContext.getUserId());
+					
+					templateFile.setCreateDate(new Date());
+					templateFile.setModifiedDate(new Date());
 
 					TemplateFileLocalServiceUtil.addTemplateFile(templateFile);
 

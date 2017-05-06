@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -373,6 +374,9 @@ public class BusinessUtils {
 					business.setCompanyId(themeDisplay.getCompanyId());
 					business.setGroupId(serviceContext.getScopeGroupId());
 					business.setUserId(serviceContext.getUserId());
+					
+					business.setCreateDate(new Date());
+					business.setModifiedDate(new Date());
 
 					if (mappingUserIdNew.trim().length() > 0) {
 						business.setMappingUserId(Long.valueOf(mappingUserIdNew));

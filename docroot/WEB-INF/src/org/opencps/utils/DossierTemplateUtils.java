@@ -1,6 +1,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -173,6 +174,9 @@ public class DossierTemplateUtils {
 					dossierTemplate.setCompanyId(themeDisplay.getCompanyId());
 					dossierTemplate.setGroupId(themeDisplay.getScopeGroupId());
 					dossierTemplate.setUserId(themeDisplay.getUserId());
+					
+					dossierTemplate.setModifiedDate(new Date());
+					dossierTemplate.setCreateDate(new Date());
 
 					DossierTemplateLocalServiceUtil
 							.addDossierTemplate(dossierTemplate);

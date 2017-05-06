@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -146,6 +147,8 @@ public class JobPosUtils {
 						columnNames.getString("workingUnitId"), row.getClassPK(), StringPool.BLANK);
 
 				String workingUnitIdNew = StringPool.BLANK;
+				
+				_log.info("=====workingUnitId:"+workingUnitId);
 
 				if (Validator.isNotNull(workingUnitId)) {
 
@@ -199,20 +202,25 @@ public class JobPosUtils {
 				long jobPosId = CounterLocalServiceUtil.increment(WebKeys.JOB_POS);
 
 				jobPos = JobPosLocalServiceUtil.createJobPos(jobPosId);
+				
+				_log.info("=====workingUnitIdNew:"+workingUnitIdNew);
 
 				jobPos.setTitle(title);
-				jobPos.setWorkingUnitId(Validator.isNotNull(workingUnitIdNew)
+				jobPos.setWorkingUnitId(!Validator.isBlank(workingUnitIdNew)
 					? Long.valueOf(workingUnitIdNew) : 0);
-				jobPos.setDirectWorkingUnitId(Validator.isNotNull(workingUnitIdNew)
+				jobPos.setDirectWorkingUnitId(!Validator.isBlank(directWorkingUnitIdNew)
 					? Long.valueOf(directWorkingUnitIdNew) : 0);
-				jobPos.setLeader(Validator.isNotNull(workingUnitIdNew)
+				jobPos.setLeader(!Validator.isBlank(leader)
 					? Integer.valueOf(leader) : 0);
 
 				jobPos.setCompanyId(themeDisplay.getCompanyId());
 				jobPos.setGroupId(serviceContext.getScopeGroupId());
 				jobPos.setUserId(serviceContext.getUserId());
+				
+				jobPos.setCreateDate(new Date());
+				jobPos.setModifiedDate(new Date());
 
-				if (Validator.isNotNull(mappingRoleIdNew)) {
+				if (!Validator.isBlank(mappingRoleIdNew)) {
 					jobPos.setMappingRoleId(Long.valueOf(mappingRoleIdNew));
 				}
 

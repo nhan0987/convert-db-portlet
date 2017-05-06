@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -407,6 +408,9 @@ public class WorkflowUtils {
 				processWorkflow.setCompanyId(themeDisplay.getCompanyId());
 				processWorkflow.setGroupId(serviceContext.getScopeGroupId());
 				processWorkflow.setUserId(serviceContext.getUserId());
+				
+				processWorkflow.setModifiedDate(new Date());
+				processWorkflow.setCreateDate(new Date());
 
 				ProcessWorkflowLocalServiceUtil.addProcessWorkflow(processWorkflow);
 

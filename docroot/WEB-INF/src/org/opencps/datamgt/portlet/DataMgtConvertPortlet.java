@@ -34,10 +34,14 @@ import org.opencps.dossiermgt.service.DossierTemplateLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.expando.model.DomainConfigExt;
 import org.opencps.expando.service.ExpandoExtLocalServiceUtil;
+import org.opencps.modifier.NoSuchWorkJobException;
+import org.opencps.modifier.model.WorkJob;
+import org.opencps.modifier.service.EmployeeJobLocalServiceUtil;
+import org.opencps.modifier.service.WorkJobLocalServiceUtil;
+import org.opencps.modifier.service.persistence.EmployeeJobPK;
+import org.opencps.modifier.service.persistence.WorkJobPK;
 import org.opencps.paymentmgt.model.PaymentFile;
 import org.opencps.paymentmgt.service.PaymentFileLocalServiceUtil;
-import org.opencps.processmgt.NoSuchProcessOrderException;
-import org.opencps.processmgt.NoSuchServiceProcessException;
 import org.opencps.processmgt.model.ActionHistory;
 import org.opencps.processmgt.model.ProcessOrder;
 import org.opencps.processmgt.model.ProcessStep;
@@ -62,6 +66,13 @@ import org.opencps.servicemgt.model.TemplateFile;
 import org.opencps.servicemgt.service.ServiceFileTemplateLocalServiceUtil;
 import org.opencps.servicemgt.service.ServiceInfoLocalServiceUtil;
 import org.opencps.servicemgt.service.TemplateFileLocalServiceUtil;
+import org.opencps.usermgt.NoSuchWorkingUnitException;
+import org.opencps.usermgt.model.Employee;
+import org.opencps.usermgt.model.JobPos;
+import org.opencps.usermgt.model.WorkingUnit;
+import org.opencps.usermgt.service.EmployeeLocalServiceUtil;
+import org.opencps.usermgt.service.JobPosLocalServiceUtil;
+import org.opencps.usermgt.service.WorkingUnitLocalServiceUtil;
 import org.opencps.utils.ActionHistoryUtils;
 import org.opencps.utils.BusinessUtils;
 import org.opencps.utils.CitizenUtils;
@@ -102,6 +113,7 @@ import org.opencps.utils.WorkflowOutputUtils;
 import org.opencps.utils.WorkflowUtils;
 import org.opencps.utils.WorkingUnitUtils;
 
+import com.liferay.portal.NoSuchOrganizationException;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -111,6 +123,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Organization;
+import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
@@ -712,7 +726,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 			addBusiness(actionRequest, actionResponse);
 			addCitizen(actionRequest, actionResponse);
-			addEmployee(actionRequest, actionResponse);
+			
 
 			addTemplateFile(actionRequest, actionResponse);
 			addServiceInfo(actionRequest, actionResponse);
@@ -736,6 +750,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 			addJobPos(actionRequest, actionResponse);
 			addWorkJob(actionRequest, actionResponse);
+			addEmployee(actionRequest, actionResponse);
 
 			addEmployeeJob(actionRequest, actionResponse);
 			setUserGroupNew(actionRequest, actionResponse);
@@ -802,7 +817,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 			addBusiness(actionRequest, actionResponse);
 			addCitizen(actionRequest, actionResponse);
-			addEmployee(actionRequest, actionResponse);
+			
 
 			addTemplateFile(actionRequest, actionResponse);
 			addServiceInfo(actionRequest, actionResponse);
@@ -826,6 +841,7 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 
 			addJobPos(actionRequest, actionResponse);
 			addWorkJob(actionRequest, actionResponse);
+			addEmployee(actionRequest, actionResponse);
 
 			addEmployeeJob(actionRequest, actionResponse);
 			setUserGroupNew(actionRequest, actionResponse);
@@ -1165,115 +1181,137 @@ public class DataMgtConvertPortlet extends MVCPortlet {
 											}
 											///////////////////////////////////////////////////////////////////////////
 											
-//											Organization organization = null;
-//
-//											try {
-//												organization = OrganizationLocalServiceUtil
-//														.getOrganization(serviceConfig
-//																.getGovAgencyOrganizationId());
-//											} catch (NoSuchOrganizationException e) {
-//
-//											}
-//
-//											if (Validator
-//													.isNotNull(organization)) {
-//
-//												WorkingUnit workingUnit = null;
-//
-//												try {
-//													workingUnit = WorkingUnitLocalServiceUtil
-//															.fetchByMappingOrganisationId(
-//																	themeDisplay
-//																			.getScopeGroupId(),
-//																	organization
-//																			.getOrganizationId());
-//												} catch (NoSuchWorkingUnitException e) {
-//
-//												}
-//
-//												if (Validator
-//														.isNotNull(workingUnit)) {
-//
-//													List<JobPos> jobPosList = new ArrayList<JobPos>();
-//
-//													jobPosList = JobPosLocalServiceUtil
-//															.getJobPoss(workingUnit
-//																	.getWorkingunitId());
-//
-//													if (jobPosList.size() > 0) {
-//
-//														for (JobPos jobPos : jobPosList) {
-//
-//															WorkJob workJob = null;
-//
-//															WorkJobPK workJobPK = new WorkJobPK(
-//																	jobPos.getJobPosId(),
-//																	workingUnit
-//																			.getWorkingunitId());
-//
-//															workJob = WorkJobLocalServiceUtil
-//																	.getWorkJob(workJobPK);
-//
-//															if (Validator
-//																	.isNotNull(workJob)) {
-//
-//																WorkJobLocalServiceUtil
-//																		.deleteWorkJob(workJob);
-//
-//															}
-//
-//															List<Employee> employeeList = new ArrayList<Employee>();
-//
-//															employeeList = EmployeeLocalServiceUtil
-//																	.getJobPosEmployees(jobPos
-//																			.getJobPosId());
-//
-//															if (employeeList
-//																	.size() > 0) {
-//
-//																for (Employee employee : employeeList) {
-//
-//																	EmployeeJobPK employeeJobPK = new EmployeeJobPK(
-//																			employee.getEmployeeId(),
-//																			jobPos.getJobPosId());
-//
-//																	EmployeeJobLocalServiceUtil
-//																			.deleteEmployeeJob(employeeJobPK);
-//
-//																}
-//															}
-//															JobPosLocalServiceUtil
-//																	.deleteJobPos(jobPos);
-//														}
-//
-//													}
-//													WorkingUnitLocalServiceUtil
-//															.deleteWorkingUnit(workingUnit);
-//												}
-//
-//												OrganizationLocalServiceUtil
-//														.deleteGroupOrganization(
-//																themeDisplay
-//																		.getScopeGroupId(),
-//																organization
-//																		.getOrganizationId());
-//											}
+											Organization organization = null;
+
+											try {
+												organization = OrganizationLocalServiceUtil
+														.getOrganization(serviceConfig
+																.getGovAgencyOrganizationId());
+											} catch (NoSuchOrganizationException e) {
+
+											}
+
+											if (Validator
+													.isNotNull(organization)) {
+
+												WorkingUnit workingUnit = null;
+
+												try {
+													workingUnit = WorkingUnitLocalServiceUtil
+															.fetchByMappingOrganisationId(
+																	themeDisplay
+																			.getScopeGroupId(),
+																	organization
+																			.getOrganizationId());
+												} catch (NoSuchWorkingUnitException e) {
+
+												}
+
+												if (Validator
+														.isNotNull(workingUnit)) {
+
+													List<JobPos> jobPosList = new ArrayList<JobPos>();
+
+													jobPosList = JobPosLocalServiceUtil
+															.getJobPoss(workingUnit
+																	.getWorkingunitId());
+
+													if (jobPosList.size() > 0) {
+
+														for (JobPos jobPos : jobPosList) {
+
+															WorkJob workJob = null;
+
+															WorkJobPK workJobPK = new WorkJobPK(
+																	jobPos.getJobPosId(),
+																	workingUnit
+																			.getWorkingunitId());
+															
+															try{
+															workJob = WorkJobLocalServiceUtil
+																	.getWorkJob(workJobPK);
+															}catch(NoSuchWorkJobException e){
+																
+															}
+
+															if (Validator
+																	.isNotNull(workJob)) {
+																
+																_log.info("=====deleting workJobPK:"+workJobPK);
+																
+																WorkJobLocalServiceUtil
+																		.deleteWorkJob(workJobPK);
+
+															}
+
+															List<Employee> employeeList = new ArrayList<Employee>();
+
+															employeeList = EmployeeLocalServiceUtil
+																	.getJobPosEmployees(jobPos
+																			.getJobPosId());
+
+															if (employeeList
+																	.size() > 0) {
+
+																for (Employee employee : employeeList) {
+
+																	EmployeeJobPK employeeJobPK = new EmployeeJobPK(
+																			employee.getEmployeeId(),
+																			jobPos.getJobPosId());
+																	
+																	_log.info("=====deleting employeeJobPK:"+employeeJobPK);
+																	try{
+																	EmployeeJobLocalServiceUtil
+																			.deleteEmployeeJob(employeeJobPK);
+																	}catch(Exception e){
+																		_log.debug(e);
+																	}
+
+																}
+															}
+															_log.info("=====deleting JobPosId:"+jobPos.getJobPosId());
+															JobPosLocalServiceUtil
+																	.deleteJobPos(jobPos);
+														}
+
+													}
+													_log.info("=====deleting WorkingunitId:"+workingUnit.getWorkingunitId());
+													WorkingUnitLocalServiceUtil
+															.deleteWorkingUnit(workingUnit);
+												}
+												_log.info("=====deleting organizationId:"+organization
+														.getOrganizationId());
+												OrganizationLocalServiceUtil
+														.deleteGroupOrganization(
+																themeDisplay
+																		.getScopeGroupId(),
+																organization
+																		.getOrganizationId());
+											}
 											//////////////////////////////////////////////////////////////////////
 											
+											_log.info("=====deleting serviceConfig:"+serviceConfig.getServiceConfigId());
 											ServiceConfigLocalServiceUtil
 													.deleteServiceConfig(serviceConfig);
+											_log.info("=====deletedone serviceConfig:"+serviceConfig.getServiceConfigId());
 										}
 									}
-
+									
+									_log.info("=====deleting dossierContent With ServiceinfoId:"+serviceInfo.getServiceinfoId());
 									removeDossierContent(themeDisplay,
 											serviceInfo.getServiceinfoId());
-
+									_log.info("=====delete done dossierContent With ServiceinfoId:"+serviceInfo.getServiceinfoId());
+									
+									_log.info("=====deleting serviceInfo.getServiceinfoId():"+serviceInfo.getServiceinfoId());
 									ServiceInfoLocalServiceUtil
 											.deleteServiceInfo(serviceInfo);
+									_log.info("=====delete done serviceInfo.getServiceinfoId():"+serviceInfo.getServiceinfoId());
 								}
 							}
+							_log.info("=====deleting dictItem_svDomain:"+dictItem_svDomain.getDictItemId());
 							DictItemLocalServiceUtil
 									.deleteDictItem(dictItem_svDomain);
+							_log.info("=====delete done dictItem_svDomain:"+dictItem_svDomain.getDictItemId());
 						}
 
 					}

@@ -312,7 +312,9 @@ public class DossierPartUtils {
 					dossierPart.setCompanyId(themeDisplay.getCompanyId());
 					dossierPart.setUserId(serviceContext.getUserId());
 					dossierPart.setGroupId(themeDisplay.getScopeGroupId());
+					
 					dossierPart.setCreateDate(new Date());
+					dossierPart.setModifiedDate(new Date());
 
 					DossierPartLocalServiceUtil.addDossierPart(dossierPart);
 

@@ -1,6 +1,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -378,6 +379,9 @@ public class WorkingUnitUtils {
 						workingUnit.setUserId(serviceContext.getUserId());
 
 						workingUnit.setMappingOrganisationId(mappingOrganizationIdNew);
+						
+						workingUnit.setCreateDate(new Date());
+						workingUnit.setModifiedDate(new Date());
 
 						WorkingUnitLocalServiceUtil
 								.addWorkingUnit(workingUnit);

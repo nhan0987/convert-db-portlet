@@ -312,6 +312,9 @@ public class CitizenUtils {
 					citizen.setCompanyId(themeDisplay.getCompanyId());
 					citizen.setGroupId(themeDisplay.getScopeGroupId());
 					citizen.setUserId(serviceContext.getUserId());
+					
+					citizen.setCreateDate(new Date());
+					citizen.setModifiedDate(new Date());
 
 					if (mappingUserIdNew.trim().length() > 0) {
 						citizen.setMappingUserId(Long.valueOf(mappingUserIdNew));

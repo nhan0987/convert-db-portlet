@@ -1,6 +1,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -463,6 +464,9 @@ public class ServiceInfoUtils {
 					serviceInfo.setCompanyId(themeDisplay.getCompanyId());
 					serviceInfo.setUserId(serviceContext.getUserId());
 					serviceInfo.setGroupId(themeDisplay.getScopeGroupId());
+					
+					serviceInfo.setCreateDate(new Date());
+					serviceInfo.setModifiedDate(new Date());
 
 					ServiceInfoLocalServiceUtil.addServiceInfo(serviceInfo);
 

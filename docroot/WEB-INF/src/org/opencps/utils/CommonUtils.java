@@ -486,9 +486,14 @@ public class CommonUtils {
 					_log.info("+userId:" + userId);
 					_log.info("=userGroupsBusiness.getUserGroupId():"
 							+ userGroupsBusiness.getUserGroupId());
+					
+					try{
 
 					UserGroupLocalServiceUtil.addUserUserGroup(userId,
 							userGroupsBusiness.getUserGroupId());
+					}catch(Exception e){
+						_log.error(e);
+					}
 					
 					if(business.getMappingOrganizationId() >0){
 						

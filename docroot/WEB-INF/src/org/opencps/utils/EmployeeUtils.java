@@ -2,6 +2,7 @@
 package org.opencps.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.ActionRequest;
@@ -304,6 +305,9 @@ public class EmployeeUtils {
 					employee.setCompanyId(themeDisplay.getCompanyId());
 					employee.setGroupId(serviceContext.getScopeGroupId());
 					employee.setUserId(serviceContext.getUserId());
+					
+					employee.setCreateDate(new Date());
+					employee.setModifiedDate(new Date());
 
 					EmployeeLocalServiceUtil.addEmployee(employee);
 

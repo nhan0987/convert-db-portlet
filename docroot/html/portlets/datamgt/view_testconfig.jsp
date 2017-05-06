@@ -380,11 +380,7 @@
 		<aui:input name="name" type="text" value="value" title="Input" />
 		<aui:button type="submit" name="name" value="addBusiness" />
 	</aui:form>
-	<aui:form action="<%=addEmployeeUrl.toString()%>" method="post"
-		name="name">
-		<aui:input name="name" type="text" value="value" title="Input" />
-		<aui:button type="submit" name="name" value="addEmployee" />
-	</aui:form>
+	
 
 	<!-- ---------------------------- -->
 	<aui:form action="<%=addTemplateFileUrl.toString()%>" method="post"
@@ -488,6 +484,12 @@
 		name="name">
 		<aui:input name="name" type="text" value="value" title="Input" />
 		<aui:button type="submit" name="name" value="addWorkJob" />
+	</aui:form>
+	
+	<aui:form action="<%=addEmployeeUrl.toString()%>" method="post"
+		name="name">
+		<aui:input name="name" type="text" value="value" title="Input" />
+		<aui:button type="submit" name="name" value="addEmployee" />
 	</aui:form>
 	<!-- ---------------------------- -->
 
